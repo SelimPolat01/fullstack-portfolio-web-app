@@ -1,0 +1,7 @@
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fafafa;
+  margin: 2rem 0 0 0;
+}

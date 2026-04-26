@@ -1,0 +1,28 @@
+.nav {
+  display: flex;
+  flex-direction: row;
+  margin: 1rem 0 0 0;
+}
+
+.flex {
+  display: flex;
+  width: 50%;
+  justify-content: center;
+  gap: 5rem;
+}
+
+.active {
+  color: #d2042d;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.link {
+  color: #f8f8f8;
+  text-decoration: none;
+  transition: transform 0.25s ease-in;
+}
+
+.link:hover {
+  transform: scale(1.1);
+}

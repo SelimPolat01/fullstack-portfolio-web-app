@@ -1,0 +1,10 @@
+html,
+body {
+  min-height: 100vh;
+  margin: 0;
+}
+
+body {
+  background: linear-gradient(to right, #2d1457, #934b8e, #a7b8d4);
+  font-family: "Josefin Sans", sans-serif;
+}

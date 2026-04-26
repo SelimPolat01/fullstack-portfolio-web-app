@@ -1,0 +1,22 @@
+.errorDiv {
+  display: flex;
+  width: 600px;
+  padding: 2rem;
+  background: #150a29;
+  border: 1px solid #4b336b;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  color: #ffffff;
+  gap: 1rem;
+  margin: 2rem 0 0 0;
+}
+
+.errorDiv img {
+  object-fit: cover;
+}
+
+.errorDiv h2 {
+  margin: 0 0 1rem 0;
+  white-space: pre-line;
+  color: #934b8e;
+}

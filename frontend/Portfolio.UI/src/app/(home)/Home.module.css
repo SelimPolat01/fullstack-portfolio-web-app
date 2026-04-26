@@ -1,0 +1,45 @@
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  color: #fafafa;
+}
+
+.textWrapper {
+  padding: 0 0 0 5rem;
+  width: 50%;
+}
+
+.imgWrapper {
+  width: 40%;
+  height: 500px;
+  position: relative;
+}
+
+.img {
+  border-radius: 50%;
+}
+
+.textWrapper h1 {
+  font-size: 64px;
+  margin: 0;
+}
+
+.textWrapper h2 {
+  font-size: 32px;
+  margin: 1rem 0;
+  background: linear-gradient(to right, #00ffff, #ff00ff, #ff1493);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  font-weight: 800;
+}
+
+.textWrapper p {
+  word-break: break-word;
+  width: 80%;
+  line-height: 1.5;
+}
