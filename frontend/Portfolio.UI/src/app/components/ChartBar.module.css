@@ -1,0 +1,30 @@
+.div {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(#f8f8f8) padding-box,
+    linear-gradient(45deg, black, #00c6ff) border-box;
+  border-radius: 12px;
+  transition: transform 0.25s ease-in;
+}
+
+.div:hover {
+  transform: scale(1.05);
+}
+
+.divContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  gap: 2rem;
+}
+
+.textOptionsContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.text {
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+}

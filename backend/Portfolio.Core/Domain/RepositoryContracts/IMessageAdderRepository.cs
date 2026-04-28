@@ -2,8 +2,8 @@
 
 namespace Portfolio.Core.Domain.RepositoryContracts
 {
-    public interface IContactRepository
+    public interface IMessageAdderRepository
     {
-        public Task<Contact> AddContactAsync(Contact contact);
+        public Task<Message> AddMessageAsync(Message message);
     }
 }

@@ -1,0 +1,29 @@
+export async function Fetch(
+  token = null,
+  param1 = null,
+  param2 = null,
+  method = "GET",
+  body = null,
+) {
+  const url = param2
+    ? `https://localhost:7178/api/${param1}/${param2}`
+    : `https://localhost:7178/api/${param1}`;
+  const response = await fetch(url, {
+    method: method,
+    headers: {
+      "Content-Type": "application/json",
+
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: method !== "GET" && body ? JSON.stringify(body) : undefined,
+  });
+  const result = await response.json();
+  if (!response.ok)
+    throw {
+      ok: false,
+      status: response.status,
+      message: result.message,
+      data: result,
+    };
+  return { result: result, status: response.status };
+}

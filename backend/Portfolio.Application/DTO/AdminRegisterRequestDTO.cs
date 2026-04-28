@@ -16,7 +16,7 @@ namespace Portfolio.Application.DTO
 
         [Required(ErrorMessage = "Phone can't be blank.")]
         [RegularExpression(@"^\+90\d{10}$", ErrorMessage = "Invalid phone format.")]
-        public string Phone { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Password can't be blank.")]
         public string Password { get; set; } = string.Empty;

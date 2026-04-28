@@ -43,7 +43,6 @@ export default function About() {
         {tectNames.map((logoPath) => (
           <div key={logoPath}>
             <Image
-              className={classes.logo}
               src={`/${logoPath}.svg`}
               alt={logoPath}
               width={30}

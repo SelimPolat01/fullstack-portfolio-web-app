@@ -6,10 +6,12 @@ import classes from "./Login.module.css";
 import Button from "./Button";
 import { useRouter } from "next/navigation";
 import ErrorMessage from "./ErrorMessage";
+import { usePostLogin } from "../../hooks/usePostLogin";
 
 export default function Login() {
   const router = useRouter();
-
+  const [isShaking, setIsShaking] = useState(false);
+  const { mutate, isPending, isError, error } = usePostLogin();
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -28,18 +30,15 @@ export default function Login() {
     },
   });
 
-  const [state, setState] = useState({
-    loading: false,
-    error: null,
-  });
-
-  const [isShaking, setIsShaking] = useState(false);
-
   function validate(input) {
     const errors = {};
-    if (!input.email.letters.trim()) errors.email = "Email is required";
-    if (!input.password.letters.trim())
-      errors.password = "Password is required";
+    if (
+      !input.email.letters.trim() ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.email.letters)
+    )
+      errors.email = "Email is invalid format";
+    if (!input.password.letters.trim() || input.password.letters.length < 5)
+      errors.password = "Password is invalid format.";
     return errors;
   }
 
@@ -82,57 +81,43 @@ export default function Login() {
       setTimeout(() => setIsShaking(false), 400);
       return;
     }
-    try {
-      setState((prev) => ({ ...prev, loading: true }));
-      const response = await fetch("https://localhost:7178/api/admin/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+    mutate(
+      {
+        body: {
           email: input.email.letters,
           password: input.password.letters,
-        }),
-      });
-      const result = await response.json();
-      if (response.status >= 500) {
-        router.replace("/error");
-        return;
-      }
-      if (!response.ok) {
-        const errorMessage =
-          (result.errors && Object.values(result.errors).flat().join(" | ")) ||
-          result.message ||
-          result.Message ||
-          result.title;
-        setState((prev) => ({ ...prev, error: errorMessage }));
-        return;
-      }
-      const token = result.token || result.Token;
-      const refreshToken = result.refreshToken || result.RefreshToken;
-      localStorage.setItem("token", token);
-      localStorage.setItem("refreshToken", refreshToken);
-      router.replace("/");
-      setInput({
-        email: {
-          letters: "",
-          isBlur: false,
         },
-        password: {
-          letters: "",
-          isBlur: false,
+      },
+      {
+        onSuccess: (data) => {
+          const token = data?.result?.token;
+          const refreshToken = data?.result?.refreshToken;
+          localStorage.setItem("token", token);
+          localStorage.setItem("refreshToken", refreshToken);
+          router.replace("/");
+          setInput({
+            email: {
+              letters: "",
+              isBlur: false,
+            },
+            password: {
+              letters: "",
+              isBlur: false,
+            },
+          });
         },
-      });
-    } catch (err) {
-      setState((prev) => ({ ...prev, error: err.message }));
-    } finally {
-      setState((prev) => ({ ...prev, loading: false }));
-    }
+        onError: (err) => {
+          console.log(err);
+          router.replace("/error");
+          return;
+        },
+      },
+    );
   }
 
   return (
     <div className={classes.div}>
-      {state.error && <ErrorMessage message={state.error} />}
+      {isError && <ErrorMessage message={error?.message} />}
       <form className={classes.form} onSubmit={submitHandler}>
         <h1 className={classes.login}>Login</h1>
         <div className={classes.labelInput}>
@@ -159,11 +144,9 @@ export default function Login() {
             value={input.password.letters}
           />
         </div>
-        <Button
-          type="submit"
-          text={state.loading ? "Loading..." : "Login"}
-          disabled={state.loading}
-        />
+        <Button disabled={isPending}>
+          {isPending ? "Loading..." : "Login"}
+        </Button>
       </form>
     </div>
   );

@@ -24,13 +24,13 @@ namespace Portfolio.Application.Services
         }
         public AuthenticationResponseDTO CreateJwtToken(ApplicationUser user, IEnumerable<string> roles)
         {
-            DateTime expiration = DateTime.UtcNow.AddMinutes(15.0);
+            DateTime expiration = DateTime.UtcNow.AddDays(1.0);
             List<Claim> claims = new()
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+                new Claim(JwtRegisteredClaimNames.Iat, new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),
                 new Claim(ClaimTypes.Name, user.Name),
             };
             foreach (string role in roles)
@@ -48,7 +48,7 @@ namespace Portfolio.Application.Services
                 Token = token,
                 RefreshToken = GenerateRefreshToken(),
                 TokenExpirationDateTime = expiration,
-                RefreshTokenExpirationDateTime = DateTime.UtcNow.AddMinutes(60.0)
+                RefreshTokenExpirationDateTime = DateTime.UtcNow.AddDays(7.0)
             };
         }
 
@@ -68,7 +68,7 @@ namespace Portfolio.Application.Services
                 Name = adminRegisterRequestDTO.Name,
                 Surname = adminRegisterRequestDTO.Surname,
                 Email = adminRegisterRequestDTO.Email,
-                PhoneNumber = adminRegisterRequestDTO.Phone,
+                PhoneNumber = adminRegisterRequestDTO.PhoneNumber,
             };
             IdentityResult result = await _userManager.CreateAsync(user, adminRegisterRequestDTO.Password);
             if (!result.Succeeded)

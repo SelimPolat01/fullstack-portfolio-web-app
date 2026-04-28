@@ -4,20 +4,20 @@ using Portfolio.Infrastructure.DbContext;
 
 namespace Portfolio.Infrastructure.Repositories
 {
-    public class ContactRepository : IContactRepository
+    public class AddMessageRepository : IMessageAdderRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public ContactRepository(ApplicationDbContext db)
+        public AddMessageRepository(ApplicationDbContext db)
         {
             _db = db;
         }
 
-        public async Task<Contact> AddContactAsync(Contact contact)
+        public async Task<Message> AddMessageAsync(Message message)
         {
-            _db.Contacts.Add(contact);
+            _db.Messages.Add(message);
             await _db.SaveChangesAsync();
-            return contact;
+            return message;
         }
     }
 }

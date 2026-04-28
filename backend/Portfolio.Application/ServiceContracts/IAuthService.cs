@@ -5,9 +5,9 @@ namespace Portfolio.Application.ServiceContracts
 {
     public interface IAuthService
     {
-        public Task<ServiceResult<AdminRegisterResponseDTO>> RegisterAdminAsync(AdminRegisterRequestDTO request);
+        public Task<ServiceResult<AdminRegisterResponseDTO>> RegisterAdminAsync(AdminRegisterRequestDTO adminRegisterRequestDTO);
 
-        public Task<ServiceResult<AdminLoginResponseDTO>> LoginAdminAsync(AdminLoginRequestDTO request);
+        public Task<ServiceResult<AdminLoginResponseDTO>> LoginAdminAsync(AdminLoginRequestDTO adminLoginRequestDTO);
 
         public AuthenticationResponseDTO CreateJwtToken(ApplicationUser user, IEnumerable<string> roles);
 

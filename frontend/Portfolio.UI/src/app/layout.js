@@ -1,9 +1,12 @@
 import Navbar from "./components/Navbar";
 import "./globals.css";
+import Providers from "../lib/reactQuery";
+import ReactQuery from "../lib/reactQuery";
+import ConditionalNavbar from "./components/ConditionalNavbar";
 
 export const metadata = {
   title: "Home",
-  description: "Portfolio site",
+  description: "Portfolio Site",
 };
 
 export default function RootLayout({ children }) {
@@ -22,8 +25,40 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
-        <Navbar />
-        {children}
+        <ReactQuery>
+          <svg width="0" height="0" style={{ position: "absolute" }}>
+            <defs>
+              <linearGradient
+                id="magic-gradient"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <stop offset="0%" stopColor="#00c6ff" />
+                <stop offset="50%" stopColor="#833ab4" />
+                <stop offset="100%" stopColor="#ff007f" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <svg width="0" height="0" style={{ position: "absolute" }}>
+            <defs>
+              <linearGradient
+                id="gold-stroke"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <stop offset="0%" stopColor="#F9D423" />
+                <stop offset="50%" stopColor="#FF4E50" />
+                <stop offset="100%" stopColor="#C33764" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <ConditionalNavbar />
+          {children}
+        </ReactQuery>
       </body>
     </html>
   );

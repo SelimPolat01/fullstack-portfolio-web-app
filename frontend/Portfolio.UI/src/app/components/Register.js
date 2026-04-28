@@ -6,9 +6,12 @@ import classes from "./Register.module.css";
 import Button from "./Button";
 import { useRouter } from "next/navigation";
 import ErrorMessage from "./ErrorMessage";
+import { usePostRegister } from "../../hooks/usePostRegister";
 
 export default function Register() {
   const router = useRouter();
+  const { mutate, isPending, isError, error } = usePostRegister();
+  const [isShaking, setIsShaking] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -30,7 +33,7 @@ export default function Register() {
       letters: "",
       isBlur: false,
     },
-    phone: {
+    phoneNumber: {
       letters: "",
       isBlur: false,
     },
@@ -44,25 +47,23 @@ export default function Register() {
     },
   });
 
-  const [state, setState] = useState({
-    loading: false,
-    error: null,
-  });
-
-  const [isShaking, setIsShaking] = useState(false);
-
   function validate(input) {
     const errors = {};
     if (!input.name.letters.trim()) errors.name = "Name is required";
     if (!input.surname.letters.trim()) errors.surname = "Surname is required";
-    if (!input.email.letters.trim()) errors.email = "Email is required";
-    if (!input.phone.letters.trim()) errors.phone = "Phone is required";
-    if (!input.password.letters.trim())
-      errors.password = "Password is required";
+    if (
+      !input.email.letters.trim() ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.email.letters)
+    )
+      errors.email = "Email is invalid format.";
+    if (!/^\+90\d{10}$/.test(input.phoneNumber.letters))
+      errors.phoneNumber = "Phone number is invalid format.";
+    if (!input.password.letters.trim() || input.password.letters.length < 5)
+      errors.password = "Password is invalid format.";
     if (!input.confirmPassword.letters.trim())
-      errors.confirmPassword = "Confirm password is required";
+      errors.confirmPassword = "Confirm password is required.";
     else if (input.password.letters !== input.confirmPassword.letters)
-      errors.confirmPassword = "Passwords do not match";
+      errors.confirmPassword = "Passwords do not match.";
     return errors;
   }
 
@@ -94,14 +95,13 @@ export default function Register() {
 
   async function submitHandler(event) {
     event.preventDefault();
-    const errors = validate(input);
-    if (Object.keys(errors).length > 0) {
+    if (Object.keys(currentErrors).length > 0) {
       setInput((prev) => ({
         ...prev,
         name: { ...prev.name, isBlur: true },
         surname: { ...prev.surname, isBlur: true },
         email: { ...prev.email, isBlur: true },
-        phone: { ...prev.phone, isBlur: true },
+        phoneNumber: { ...prev.phoneNumber, isBlur: true },
         password: { ...prev.password, isBlur: true },
         confirmPassword: { ...prev.confirmPassword, isBlur: true },
       }));
@@ -109,80 +109,63 @@ export default function Register() {
       setTimeout(() => setIsShaking(false), 400);
       return;
     }
-    try {
-      setState((prev) => ({ ...prev, loading: true }));
-      const response = await fetch(
-        "https://localhost:7178/api/admin/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: input.name.letters,
-            surname: input.surname.letters,
-            email: input.email.letters,
-            phone: input.phone.letters,
-            password: input.password.letters,
-            confirmPassword: input.confirmPassword.letters,
-          }),
+    mutate(
+      {
+        body: {
+          name: input.name.letters,
+          surname: input.surname.letters,
+          email: input.email.letters,
+          phoneNumber: input.phoneNumber.letters,
+          password: input.password.letters,
+          confirmPassword: input.confirmPassword.letters,
         },
-      );
-      const result = await response.json();
-      if (response.status >= 500) {
-        router.replace("/error");
-        return;
-      }
-      if (!response.ok) {
-        const errorMessage =
-          (result.errors && Object.values(result.errors).flat().join(" | ")) ||
-          result.message ||
-          result.Message ||
-          result.title;
-        setState((prev) => ({ ...prev, error: errorMessage }));
-        return;
-      }
-      const token = result.token || result.Token;
-      const refreshToken = result.refreshToken || result.RefreshToken;
-      localStorage.setItem("token", token);
-      localStorage.setItem("refreshToken", refreshToken);
-      router.replace("/");
-      setInput({
-        name: {
-          letters: "",
-          isBlur: false,
+      },
+      {
+        onSuccess: (data) => {
+          const token = data?.result?.token;
+          const refreshToken = data?.result?.refreshToken;
+          localStorage.setItem("token", token);
+          localStorage.setItem("refreshToken", refreshToken);
+          router.replace("/");
+          setInput({
+            name: {
+              letters: "",
+              isBlur: false,
+            },
+            surname: {
+              letters: "",
+              isBlur: false,
+            },
+            email: {
+              letters: "",
+              isBlur: false,
+            },
+            phoneNumber: {
+              letters: "",
+              isBlur: false,
+            },
+            password: {
+              letters: "",
+              isBlur: false,
+            },
+            confirmPassword: {
+              letters: "",
+              isBlur: false,
+            },
+          });
         },
-        surname: {
-          letters: "",
-          isBlur: false,
+        onError: (err) => {
+          console.log(err);
+          router.replace("/error");
+          return;
         },
-        email: {
-          letters: "",
-          isBlur: false,
-        },
-        phone: {
-          letters: "",
-          isBlur: false,
-        },
-        password: {
-          letters: "",
-          isBlur: false,
-        },
-        confirmPassword: {
-          letters: "",
-          isBlur: false,
-        },
-      });
-    } catch (err) {
-      setState((prev) => ({ ...prev, error: err.message }));
-    } finally {
-      setState((prev) => ({ ...prev, loading: false }));
-    }
+      },
+    );
   }
 
   return (
     <div className={classes.div}>
-      {state.error && <ErrorMessage message={state.error} />}
+      {isError && <ErrorMessage message={error?.message} />}
       <form className={classes.form} onSubmit={submitHandler}>
         <h1 className={classes.register}>Register</h1>
         <div className={classes.fullName}>
@@ -224,15 +207,16 @@ export default function Register() {
           />
         </div>
         <div className={classes.labelInput}>
-          <label htmlFor="phone">Phone Number</label>
+          <label htmlFor="phoneNumber">Phone Number</label>
           <Input
             type="tel"
-            name="phone"
-            className={`${input.phone.isBlur && currentErrors.phone ? classes.error : ""} ${isShaking && currentErrors.phone ? classes.shake : ""}`}
+            name="phoneNumber"
+            className={`${input.phoneNumber.isBlur && currentErrors.phoneNumber ? classes.error : ""} ${isShaking && currentErrors.phoneNumber ? classes.shake : ""}`}
             onFocus={focusHandler}
             onChange={changeHandler}
             onBlur={blurHandler}
-            value={input.phone.letters}
+            value={input.phoneNumber.letters}
+            placeholder="(+90) XXX XXX XXXX"
           />
         </div>
         <div className={classes.labelInput}>
@@ -259,11 +243,9 @@ export default function Register() {
             value={input.confirmPassword.letters}
           />
         </div>
-        <Button
-          type="submit"
-          text={state.loading ? "Loading..." : "Register"}
-          disabled={state.loading}
-        />
+        <Button disabled={isPending}>
+          {isPending ? "Loading..." : "Register"}
+        </Button>
       </form>
     </div>
   );

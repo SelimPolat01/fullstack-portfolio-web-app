@@ -7,7 +7,7 @@ namespace Portfolio.Infrastructure.DbContext
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {
-        public virtual DbSet<Contact> Contacts { get; set; }
+        public virtual DbSet<Message> Messages { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> dbContextOptionsBuilder) : base(dbContextOptionsBuilder)
         {
@@ -17,7 +17,7 @@ namespace Portfolio.Infrastructure.DbContext
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Entity<Contact>().ToTable("Contacts");
+            builder.Entity<Message>().ToTable("Messages");
         }
     }
 }

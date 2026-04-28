@@ -1,6 +1,6 @@
 ﻿namespace Portfolio.Application.DTO
 {
-    public class ContactAddResponseDTO
+    public class MessageAddResponseDTO
     {
         public Guid Id { get; set; }
         public bool Success { get; set; }

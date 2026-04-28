@@ -1,0 +1,114 @@
+.div {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(#f8f8f8) padding-box,
+    linear-gradient(45deg, black, #00c6ff) border-box;
+  border-radius: 12px;
+  width: 350px;
+  transition: transform 0.25s ease-in;
+}
+
+.div:hover {
+  transform: scale(1.05);
+}
+
+.divContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  gap: 0.5rem;
+}
+
+.circleBarContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.infoContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.textContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.text,
+.subText,
+.percent,
+.change,
+.description {
+  margin: 0;
+  padding: 0;
+}
+
+.subText {
+  color: rgb(111, 110, 110);
+  font-size: 14px;
+}
+
+.descriptionContainer {
+  width: 92%;
+}
+
+.description {
+  text-align-last: center;
+  color: rgb(111, 110, 110);
+  word-break: break-word;
+  line-height: 1.2;
+}
+
+.subDiv {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.textDiv {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.textCash {
+  font-size: 14px;
+  color: rgb(111, 110, 110);
+}
+
+.moneyDiv {
+  display: flex;
+  gap: 2rem;
+}
+
+.moneyContainer {
+}
+
+.money {
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+}
+
+.changeUpIcon {
+  color: green;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+}
+
+.changeDownIcon {
+  color: red;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+}
+
+.cashIconContainer {
+  display: flex;
+  align-items: flex-end;
+}

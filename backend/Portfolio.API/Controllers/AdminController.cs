@@ -46,7 +46,7 @@ namespace Portfolio.API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> PostLogout()
         {
-            var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
             if (userId == null) return Unauthorized();
             await _authService.LogoutAdminAsync(userId);
             return Ok(new { Message = "Logged out successfully" });

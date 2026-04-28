@@ -9,7 +9,7 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
   width: 600px;
   padding: 2rem;
   background: #150a29;
@@ -17,32 +17,6 @@
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
   color: #ffffff;
-}
-
-.form button {
-  border-radius: 12px;
-  color: inherit;
-  outline: none;
-  font-size: 20px;
-}
-
-.form button {
-  width: 90px;
-  height: 40px;
-  background: linear-gradient(
-    105.66deg,
-    #00f4ff 16.76%,
-    #68ffed 46.39%,
-    #9867ff 76.01%
-  );
-  font-family: inherit;
-  color: black;
-  transition: transform 0.25s ease-in;
-  transform-origin: center;
-}
-
-.form button:hover {
-  transform: scale(1.1);
 }
 
 .login {
@@ -60,7 +34,7 @@
   color: transparent;
   display: inline-block;
   width: max-content;
-  margin: 10px 0;
+  margin: 0;
 }
 
 .fullName {

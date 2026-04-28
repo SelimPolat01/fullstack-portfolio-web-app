@@ -1,7 +1,8 @@
 .main {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   height: 100vh;
   color: #fafafa;
+  margin: 6rem 0 0 0;
 }

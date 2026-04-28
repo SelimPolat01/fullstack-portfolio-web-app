@@ -1,11 +1,13 @@
+import { Children } from "react";
 import classes from "./Button.module.css";
 
 export default function Button({
   type,
-  text,
   cancelButton,
   onClick,
   disabled,
+  children,
+  ...props
 }) {
   return (
     <button
@@ -13,8 +15,9 @@ export default function Button({
       className={`${cancelButton ? classes.cancelButton : classes.button}`}
       onClick={onClick}
       disabled={disabled ? true : false}
+      {...props}
     >
-      {text}
+      {children}
     </button>
   );
 }

@@ -1,0 +1,91 @@
+.div {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(#f8f8f8) padding-box,
+    linear-gradient(45deg, black, #00c6ff) border-box;
+  border-radius: 12px;
+  transition: transform 0.25s ease-in;
+}
+
+.div:hover {
+  transform: scale(1.05);
+}
+
+.divContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.iconContainer {
+  border-radius: 12px;
+  padding: 8px;
+  align-self: flex-start;
+  background-color: rgb(228, 228, 228);
+  height: 24px;
+}
+
+.textContainer {
+}
+
+.text {
+  font-weight: 500;
+  color: rgb(111, 110, 110);
+}
+
+.totalChangeContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.totalContainer {
+  align-self: center;
+}
+
+.total {
+  color: black;
+  font-size: 38px;
+  margin: 0;
+}
+
+.greenBg {
+  background-color: rgb(220, 255, 212);
+}
+
+.redBg {
+  background-color: rgb(254, 222, 222);
+}
+
+.changeContainer {
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  align-self: center;
+}
+
+.upChange {
+  color: green;
+  margin: 0;
+  display: inline-block;
+}
+
+.downChange {
+  color: red;
+  margin: 0;
+  display: inline-block;
+}
+
+.upColor {
+  color: green;
+}
+
+.downColor {
+  color: red;
+}
+
+.changeIcon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+}

@@ -1,0 +1,35 @@
+.messageContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem;
+  width: 300px;
+  height: 100px;
+  background: #150a29;
+  border: 1px solid #4b336b;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.25s ease-in;
+}
+
+.messageContainer:hover {
+  transform: scale(1.07);
+  box-shadow: 0 0 15px rgba(255, 0, 127, 0.5);
+}
+
+.messageContainer h2 {
+  margin: 0;
+}
+
+.text {
+  margin: 0;
+}
+
+.date {
+  align-self: flex-end;
+  opacity: 0.5;
+  font-size: 12px;
+  margin: 0;
+}
