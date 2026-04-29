@@ -15,26 +15,24 @@ using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policyBuilder =>
     {
-        policyBuilder.WithOrigins("http://localhost:3000");
+        policyBuilder.WithOrigins("https://localhost:3000", "http://localhost:3000");
         policyBuilder.AllowAnyHeader();
         policyBuilder.AllowAnyMethod();
         policyBuilder.AllowCredentials();
     });
 });
 builder.Services.AddScoped<IMessageGetherRepository, GetMessageRepository>();
-builder.Services.AddScoped<IMessageAdderRepository, AddMessageRepository>();
+builder.Services.AddScoped<IMessageAdderRepository, PostMessageRepository>();
+builder.Services.AddScoped<IMessagePatcherRepository, PatchMessageRepository>();
 builder.Services.AddScoped<IMessageGetterService, MessageGetterService>();
 builder.Services.AddScoped<IMessageAdderService, MessageAdderService>();
+builder.Services.AddScoped<IMessagePatcherService, MessagePatcherService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
@@ -61,7 +59,7 @@ builder.Services.AddAuthentication(options =>
             RoleClaimType = ClaimTypes.Role,
             NameClaimType = ClaimTypes.Name,
             ValidateAudience = true,
-            ValidAudience = "http://localhost:3000",
+            ValidAudience = "https://localhost:3000",
             ValidateIssuer = true,
             ValidIssuer = "https://localhost:7178",
             ValidateIssuerSigningKey = true,
@@ -87,7 +85,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlSer
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");

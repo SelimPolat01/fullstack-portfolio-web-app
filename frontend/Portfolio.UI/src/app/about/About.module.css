@@ -1,4 +1,4 @@
-.main {
+.div {
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -19,7 +19,7 @@
   background-clip: text;
   color: transparent;
   display: inline-block;
-  margin: 5rem 0 3rem 0;
+  margin: 0 0 3rem 0;
 }
 
 .aboutText {
@@ -50,9 +50,10 @@
   background-color: black;
   border-radius: 50%;
   overflow: hidden;
-  transition: transform 0.25s ease-in;
+  transition: all 0.25s ease-in;
 }
 
 .logoDiv div:hover {
-  transform: scale(1.1);
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.7));
+  transform: scale(1.05); /* Logoyu hafifçe büyütüp kullanıcıya yaklaştırır */
 }

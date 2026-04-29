@@ -1,17 +1,19 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import Input from "./Input";
 import classes from "./Login.module.css";
 import Button from "./Button";
 import { useRouter } from "next/navigation";
 import ErrorMessage from "./ErrorMessage";
 import { usePostLogin } from "../../hooks/usePostLogin";
+import { LangContext } from "@/contexts/LangContext";
 
 export default function Login() {
   const router = useRouter();
   const [isShaking, setIsShaking] = useState(false);
   const { mutate, isPending, isError, error } = usePostLogin();
+  const { lang, toggleLang } = useContext(LangContext);
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -29,6 +31,18 @@ export default function Login() {
       isBlur: false,
     },
   });
+  const texts = {
+    tr: {
+      h1: "Giriş Yap",
+      labels: ["Eposta", "Şifre"],
+      button: ["Yükleniyor...", "Giriş"],
+    },
+    en: {
+      h1: "Login",
+      labels: ["Email", "Password"],
+      button: ["Loading...", "Login"],
+    },
+  };
 
   function validate(input) {
     const errors = {};
@@ -119,9 +133,9 @@ export default function Login() {
     <div className={classes.div}>
       {isError && <ErrorMessage message={error?.message} />}
       <form className={classes.form} onSubmit={submitHandler}>
-        <h1 className={classes.login}>Login</h1>
+        <h1 className={classes.login}>{texts[lang].h1}</h1>
         <div className={classes.labelInput}>
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email">{texts[lang].labels[0]}</label>
           <Input
             type="email"
             name="email"
@@ -133,7 +147,7 @@ export default function Login() {
           />
         </div>
         <div className={classes.labelInput}>
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">{texts[lang].labels[1]}</label>
           <Input
             type="password"
             name="password"
@@ -145,7 +159,7 @@ export default function Login() {
           />
         </div>
         <Button disabled={isPending}>
-          {isPending ? "Loading..." : "Login"}
+          {isPending ? texts[lang].button[0] : texts[lang].button[1]}
         </Button>
       </form>
     </div>

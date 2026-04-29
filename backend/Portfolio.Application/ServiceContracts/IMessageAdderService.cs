@@ -4,6 +4,6 @@ namespace Portfolio.Core.ServiceContracts
 {
     public interface IMessageAdderService
     {
-        public Task<MessageAddResponseDTO> AddContactAsync(MessageAddRequestDTO messageAddRequestDTO);
+        public Task<ServiceResult<MessageAddResponseDTO>> AddMessageAsync(MessageAddRequestDTO messageAddRequestDTO);
     }
 }

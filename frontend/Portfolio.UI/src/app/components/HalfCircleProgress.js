@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import { PieChart, Pie } from "recharts";
 import classes from "./HalfCircleProgress.module.css";
+import { LangContext } from "@/contexts/LangContext";
 
 export default function HalfCircleProgress({
   text,
@@ -12,11 +13,17 @@ export default function HalfCircleProgress({
   downChange,
   optionsIcon,
 }) {
+  const { lang, toggleLang } = useContext(LangContext);
   const data = [
     { name: "Dolu", value: 75, fill: "#3b82f6" },
     { name: "Boş", value: 25, fill: "#e5e7eb" },
   ];
-
+  const texts = {
+    tr: {
+      cashInfos: ["Hedef", "Hasılat", "Bugün"],
+    },
+    en: { cashInfos: ["Target", "Revenue", "Today"] },
+  };
   const COLORS = ["#3b82f6", "#e5e7eb"];
 
   return (
@@ -49,8 +56,8 @@ export default function HalfCircleProgress({
           <div className={classes.percentContainer}>
             <h1 className={classes.percent}>{percent}%</h1>
           </div>
-          <div className={classes.changeContainer}>
-            <p className={classes.change}>{change}%</p>
+          <div className={`${classes.changeContainer} ${classes.greenBg}`}>
+            <p className={`${classes.change} ${classes.upChange}`}>{change}%</p>
           </div>
           <div className={classes.descriptionContainer}>
             <p className={classes.description}>{description}</p>
@@ -61,21 +68,27 @@ export default function HalfCircleProgress({
         <div className={classes.subDiv}>
           <div className={classes.textDiv}>
             <div>
-              <span className={classes.textCash}>Target</span>
+              <span className={classes.textCash}>
+                {texts[lang].cashInfos[0]}
+              </span>
               <div className={classes.cashIconContainer}>
                 <h2 className={classes.money}>13$K</h2>
                 <span className={classes.changeUpIcon}>{upChange}</span>
               </div>
             </div>
             <div>
-              <span className={classes.textCash}>Revenue</span>
+              <span className={classes.textCash}>
+                {texts[lang].cashInfos[1]}
+              </span>
               <div className={classes.cashIconContainer}>
                 <h2 className={classes.money}>21$K</h2>
                 <span className={classes.changeUpIcon}>{upChange}</span>
               </div>
             </div>
             <div>
-              <span className={classes.textCash}>Today</span>
+              <span className={classes.textCash}>
+                {texts[lang].cashInfos[2]}
+              </span>
               <div className={classes.cashIconContainer}>
                 <h2 className={classes.money}>7$K</h2>
                 <span className={classes.changeDownIcon}>{downChange}</span>

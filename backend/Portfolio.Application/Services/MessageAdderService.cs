@@ -15,18 +15,16 @@ namespace Portfolio.Core.Services
             _messageAdderRepository = messageAdderRepository;
         }
 
-        public async Task<MessageAddResponseDTO> AddContactAsync(MessageAddRequestDTO messageAddRequesDTO)
+        public async Task<ServiceResult<MessageAddResponseDTO>> AddMessageAsync(MessageAddRequestDTO messageAddRequesDTO)
         {
-            if (messageAddRequesDTO == null) throw new ArgumentNullException(nameof(messageAddRequesDTO));
             ValidationHelper.ModelValidation(messageAddRequesDTO);
             Message message = messageAddRequesDTO.ToMessage();
             Message savedMessage = await _messageAdderRepository.AddMessageAsync(message);
-            return new MessageAddResponseDTO()
+            return ServiceResult<MessageAddResponseDTO>.Ok(new MessageAddResponseDTO()
             {
                 Id = savedMessage.Id,
-                Success = true,
                 Message = "Message saved successfully",
-            };
+            });
         }
     }
 }

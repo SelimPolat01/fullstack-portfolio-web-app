@@ -40,7 +40,7 @@ namespace Portfolio.Application.Services
             ;
             SymmetricSecurityKey securityKey = new(Encoding.UTF8.GetBytes("benim_cok_gizli_super_guvenli_anahtarim_123456789"));
             SigningCredentials signingCredentials = new(securityKey, SecurityAlgorithms.HmacSha256);
-            JwtSecurityToken tokenGenerator = new(issuer: "https://localhost:7178", audience: "http://localhost:3000", claims, expires: expiration, signingCredentials: signingCredentials);
+            JwtSecurityToken tokenGenerator = new(issuer: "https://localhost:7178", audience: "https://localhost:3000", claims, expires: expiration, signingCredentials: signingCredentials);
             JwtSecurityTokenHandler jwtSecurityTokenHandler = new();
             string token = jwtSecurityTokenHandler.WriteToken(tokenGenerator);
             return new AuthenticationResponseDTO()

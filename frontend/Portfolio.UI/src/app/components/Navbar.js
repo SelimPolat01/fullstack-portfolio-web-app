@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import classes from "./Navbar.module.css";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Button from "./Button";
 import {
   LogIn,
@@ -16,25 +16,51 @@ import {
   MessageSquareText,
   Menu,
   LayoutDashboard,
+  ToggleLeft,
+  ToggleRight,
 } from "lucide-react";
 import { useGetMessages } from "../../hooks/useGetMessages";
 import { usePostLogout } from "../../hooks/usePostLogout";
+import { LangContext } from "@/contexts/LangContext";
 
 export default function Navbar() {
   const router = useRouter();
   const pathName = usePathname();
   const [isAuth, setIsAuth] = useState(false);
-  const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [token, setToken] = useState(null);
   const { data, isLoading, isError, error } = useGetMessages(token);
   const { mutate, isPending, isMutationError, mutationError } =
     usePostLogout(token);
-
+  const { lang, toggleLang } = useContext(LangContext);
   useEffect(() => {
     const token = localStorage.getItem("token");
     setToken(token);
     setIsAuth(!!token);
   }, [pathName]);
+  const texts = {
+    tr: {
+      links: [
+        { path: "/dashboard", text: "Kontrol Paneli" },
+        { path: "/messages", text: "Mesajlar" },
+        { path: "/works", text: "Çalışmalar" },
+        { path: "/projects", text: "Projeler" },
+        { path: "/settings", text: "Ayarlar" },
+        { path: "/status", text: "Durum" },
+      ],
+      logOut: "Çıkış Yap",
+    },
+    en: {
+      links: [
+        { path: "/dashboard", text: "Dashboard" },
+        { path: "/messages", text: "Messages" },
+        { path: "/works", text: "Works" },
+        { path: "/projects", text: "Projects" },
+        { path: "/settings", text: "Settings" },
+        { path: "/status", text: "Status" },
+      ],
+      logOut: "Logout",
+    },
+  };
 
   async function logoutHandler() {
     const token = localStorage.getItem("token");
@@ -52,19 +78,6 @@ export default function Navbar() {
     );
   }
 
-  const links = [
-    { path: "/dashboard", text: "Dashboard" },
-    { path: "/messages", text: "Messages" },
-    { path: "/works", text: "Works" },
-    { path: "/projects", text: "Projects" },
-    { path: "/settings", text: "Settings" },
-    { path: "/status", text: "Status" },
-  ];
-
-  if (isLoading && isAuth) {
-    return <span>Loading...</span>;
-  }
-
   return (
     <nav className={classes.nav}>
       <div className={classes.firstFlex}>
@@ -72,8 +85,8 @@ export default function Navbar() {
           <div className={classes.menuWrapper}>
             <Menu size={40} />
             <ul className={classes.menuPanel}>
-              {links.map((link, index) => (
-                <li key={index} className={classes.menuList}>
+              {texts[lang].links.map((link) => (
+                <li key={link.path} className={classes.menuList}>
                   <Link
                     className={classes.menuLink}
                     href={link.path}
@@ -87,12 +100,13 @@ export default function Navbar() {
               <li className={classes.menuList}>
                 <Button
                   type="button"
-                  text="LOGOUT"
                   onClick={logoutHandler}
                   cancelButton
                   title="Logout"
                 >
-                  <span className={classes.logoutText}>Logout</span>
+                  <span className={classes.logoutText}>
+                    {texts[lang].logOut}
+                  </span>
                 </Button>
               </li>
             </ul>
@@ -106,7 +120,7 @@ export default function Navbar() {
             }
             title="Dashboard"
           >
-            <LayoutDashboard size={40} stroke="url(#magic-gradient)" />
+            <LayoutDashboard size={40} stroke="url(#gold-stroke)" />
           </Link>
         )}
         {isAuth && pathName !== "/messages" && (
@@ -115,8 +129,10 @@ export default function Navbar() {
             className={pathName === "/messages" ? classes.active : classes.link}
             title="Messages"
           >
-            <MessageSquareText size={40} stroke="url(#magic-gradient)" />
-            <span>{data?.result?.length}</span>
+            <MessageSquareText size={40} stroke="url(#gold-stroke)" />
+            <span className={classes.unreadLength}>
+              {data?.result?.filter((message) => !message.isRead).length}
+            </span>
           </Link>
         )}
         <Link
@@ -124,7 +140,7 @@ export default function Navbar() {
           className={pathName === "/" ? classes.hidden : classes.link}
           title="Home"
         >
-          <Home size={40} stroke="url(#magic-gradient)" />
+          <Home size={40} stroke="url(#gold-stroke)" />
         </Link>
       </div>
       <div className={classes.lastFlex}>
@@ -133,21 +149,21 @@ export default function Navbar() {
           className={pathName === "/projects" ? classes.hidden : classes.link}
           title="Projects"
         >
-          <Code2 size={40} stroke="url(#magic-gradient)" />
+          <Code2 size={40} stroke="url(#gold-stroke)" />
         </Link>
         <Link
           href="/about"
           className={pathName === "/about" ? classes.hidden : classes.link}
           title="About"
         >
-          <BookOpen size={40} stroke="url(#magic-gradient)" />
+          <BookOpen size={40} stroke="url(#gold-stroke)" />
         </Link>
         <Link
           href="/contact"
           className={pathName === "/contact" ? classes.hidden : classes.link}
           title="Contact"
         >
-          <Mail size={40} stroke="url(#magic-gradient)" />
+          <Mail size={40} stroke="url(#gold-stroke)" />
         </Link>
         {!isAuth && (
           <Link
@@ -157,7 +173,7 @@ export default function Navbar() {
             }
             title="Register"
           >
-            <UserPlus size={40} stroke="url(#magic-gradient)" />
+            <UserPlus size={40} stroke="url(#gold-stroke)" />
           </Link>
         )}
         {!isAuth && (
@@ -168,20 +184,31 @@ export default function Navbar() {
             }
             title="Login"
           >
-            <LogIn size={40} stroke="url(#magic-gradient)" />
+            <LogIn size={40} stroke="url(#gold-stroke)" />
           </Link>
         )}
         {isAuth && (
           <Button
             type="button"
-            text="LOGOUT"
             onClick={logoutHandler}
             cancelButton
             title="Logout"
           >
-            <LogOut size={40} stroke="url(#magic-gradient)" />
+            <LogOut size={40} stroke="url(#gold-stroke)" />
           </Button>
         )}
+        <Button
+          type="button"
+          cancelButton
+          onClick={toggleLang}
+          title={lang === "en" ? "Switch to Turkish" : "İngilizce'ye Geç"}
+        >
+          {lang === "en" ? (
+            <ToggleRight size={40} stroke="url(#gold-stroke)" />
+          ) : (
+            <ToggleLeft size={40} stroke="url(#gold-stroke)" />
+          )}
+        </Button>
       </div>
     </nav>
   );

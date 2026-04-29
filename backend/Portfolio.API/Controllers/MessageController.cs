@@ -12,13 +12,16 @@ namespace Portfolio.API.Controllers
     [ApiController]
     public class MessageController : ControllerBase
     {
-        private readonly IMessageAdderService _contactAdderService;
+        private readonly IMessageAdderService _messageAdderService;
         private readonly IMessageGetterService _messageGetterService;
+        private readonly IMessagePatcherService _messagePatcherService;
 
-        public MessageController(IMessageAdderService contactAdderService, IMessageGetterService messageGetterService)
+
+        public MessageController(IMessageAdderService contactAdderService, IMessageGetterService messageGetterService, IMessagePatcherService messagePatcherService)
         {
-            _contactAdderService = contactAdderService;
+            _messageAdderService = contactAdderService;
             _messageGetterService = messageGetterService;
+            _messagePatcherService = messagePatcherService;
         }
 
         [HttpGet]
@@ -56,8 +59,18 @@ namespace Portfolio.API.Controllers
         [Authorize("NotAuthenticated")]
         public async Task<ActionResult<MessageAddResponseDTO>> PostMessage(MessageAddRequestDTO contact)
         {
-            MessageAddResponseDTO result = await _contactAdderService.AddContactAsync(contact);
+            var result = await _messageAdderService.AddMessageAsync(contact);
             return Ok(result);
+        }
+
+        [HttpPatch]
+        [Route("{messageId}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> PatchMessageRead(Guid messageId)
+        {
+            var result = await _messagePatcherService.PatchMessageAsync(messageId);
+            if (!result.Success) return BadRequest(result.Message);
+            return Ok(new { message = result.Message });
         }
     }
 }

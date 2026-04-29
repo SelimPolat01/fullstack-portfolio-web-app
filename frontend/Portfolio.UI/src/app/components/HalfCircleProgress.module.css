@@ -47,7 +47,7 @@
 
 .subText {
   color: rgb(111, 110, 110);
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .descriptionContainer {
@@ -74,17 +74,37 @@
   padding: 1rem;
 }
 
+.changeContainer {
+  border-radius: 12px;
+}
+
+.greenBg {
+  background-color: rgb(220, 255, 212);
+}
+
+.redBg {
+  background-color: rgb(254, 222, 222);
+}
+
+.upChange {
+  color: green;
+  padding: 4px 8px;
+}
+
+.downChange {
+  color: red;
+  padding: 4px 8px;
+}
+
 .textCash {
   font-size: 14px;
   color: rgb(111, 110, 110);
+  font-weight: bold;
 }
 
 .moneyDiv {
   display: flex;
   gap: 2rem;
-}
-
-.moneyContainer {
 }
 
 .money {

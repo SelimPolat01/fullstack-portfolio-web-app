@@ -8,59 +8,51 @@ import {
   MessageSquare,
   MoreVertical,
 } from "lucide-react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  PieChart,
-  Pie,
-  Cell,
-} from "recharts";
 import Frame from "../components/Frame";
 import classes from "./Dashboard.module.css";
 import { useGetMessages } from "@/hooks/useGetMessages";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ChartBar from "../components/ChartBar";
 import HalfCircleProgress from "../components/HalfCircleProgress";
+import { LangContext } from "@/contexts/LangContext";
 
 export default function Dashboard() {
   const [token, setToken] = useState(null);
   useEffect(() => {
     setToken(localStorage.getItem("token"));
   }, []);
-
+  const { lang, toggleLang } = useContext(LangContext);
   const { data, isLoading, isError, error } = useGetMessages(token);
-  const chartData = [
-    { month: "Jan", count: 2 },
-    { month: "Feb", count: 5 },
-    { month: "Mar", count: 0 },
-    { month: "Apr", count: 3 },
-    { month: "May", count: 7 },
-    { month: "Jun", count: 1 },
-    { month: "Jul", count: 4 },
-    { month: "Aug", count: 6 },
-    { month: "Sep", count: 2 },
-    { month: "Oct", count: 8 },
-    { month: "Nov", count: 1 },
-    { month: "Dec", count: 0 },
-  ];
-  const progressData = [
-    { name: "Full", value: 75 },
-    { name: "Empty", value: 25 },
-  ];
-
+  const texts = {
+    tr: {
+      frameTexts: ["Mesajlar", "Projeler", "Çalışmalar"],
+      monthlyProjectsText: "Aylık Projeler",
+      monthlyCashTargetTexts: [
+        "Aylık Gelir Hedefi",
+        "Her ay için belirlediğin hedefler",
+        "Bugün 4156 $ kazandın. Geçen aya göre daha yüksek. İyi iş!",
+      ],
+    },
+    en: {
+      frameTexts: ["Messages", "Projects", "Works"],
+      monthlyProjectsText: "Monthly Projects",
+      monthlyCashTargetTexts: [
+        "Monthly Revenue Target",
+        "Target you've set for each month",
+        "You earn $4156 today. It's higher than last month. Good work!",
+      ],
+    },
+  };
   const COLORS = ["#3b82f6", "#e5e7eb"];
 
   return (
-    <main>
-      <div className={classes.div}>
+    <div className={classes.div}>
+      <div className={classes.divContainer}>
         <div className={classes.frameDiv}>
           <Frame
             className={classes.frame}
             icon={<MessageSquare />}
-            text="Messages"
+            text={texts[lang].frameTexts[0]}
             total={data?.result?.length}
             change="11.46%"
             changeIcon={<ArrowUp />}
@@ -69,7 +61,7 @@ export default function Dashboard() {
           <Frame
             className={classes.frame}
             icon={<Folder />}
-            text="Projects"
+            text={texts[lang].frameTexts[1]}
             total="13"
             change="32.63%"
             changeIcon={<ArrowDown />}
@@ -78,7 +70,7 @@ export default function Dashboard() {
           <Frame
             className={classes.frame}
             icon={<Briefcase />}
-            text="Works"
+            text={texts[lang].frameTexts[2]}
             total="2"
             change="7.13%"
             changeIcon={<ArrowDown />}
@@ -87,21 +79,21 @@ export default function Dashboard() {
           <ChartBar
             width="696"
             height="250"
-            text="Monthly Projects"
+            text={texts[lang].monthlyProjectsText}
             optionsIcon={<MoreVertical />}
           />
           <HalfCircleProgress
-            text="Monthly Target"
-            subText="Target you've set for each month"
+            text={texts[lang].monthlyCashTargetTexts[0]}
+            subText={texts[lang].monthlyCashTargetTexts[1]}
             percent="77"
             change="21"
-            description="You earn $4156 today. It's higher than last month. Good work!"
+            description={texts[lang].monthlyCashTargetTexts[2]}
             upChange={<ArrowUp />}
             downChange={<ArrowDown />}
             optionsIcon={<MoreVertical />}
           />
         </div>
       </div>
-    </main>
+    </div>
   );
 }

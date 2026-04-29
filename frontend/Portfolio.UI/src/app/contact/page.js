@@ -1,16 +1,70 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import classes from "./Contact.module.css";
 import Button from "../components/Button";
 import Input from "../components/Input";
 import { Phone, Mail, MapPin, ArrowDown } from "lucide-react";
 import { usePostMessage } from "../../hooks/usePostMessage";
 import { useRouter } from "next/navigation";
+import { LangContext } from "@/contexts/LangContext";
 
 export default function Home() {
   const { mutate, isPending, isError, error } = usePostMessage();
   const router = useRouter();
+  const { lang, toggleLang } = useContext(LangContext);
+  const [isOpenDropdown, setIsOpenDropdown] = useState(false);
+  const [subjectTouched, setSubjectTouched] = useState(false);
+  const [selected, setSelected] = useState("");
+  const [isShaking, setIsShaking] = useState(false);
+  const texts = {
+    tr: {
+      h1: "Bana mesaj bırak",
+      p: "Şu anda yazılım geliştiricisi olarak staj fırsatları ile birlikte freelance veya iş birliği projeleri arıyorum. Eğer herhangi bir sorunuz, proje fikriniz veya fırsatınız varsa, bana mesaj göndermekten çekinmeyin. En kısa sürede geri dönüş yapacağım.",
+      labels: [
+        "İsim",
+        "Soyisim",
+        "Eposta",
+        "Telefon Numarası",
+        "Konu",
+        "Mesaj",
+      ],
+      selects: [
+        "Genel Soru",
+        "Teknik Soru",
+        "Iş Fırsatı",
+        "Staj Teklifi",
+        "Serbest Çalışma",
+        "Geri Bildirim",
+        "Lütfen Seçiniz",
+      ],
+      button: ["Yükleniyor...", "Gönder"],
+      contactMe: "Bana Ulaş",
+    },
+    en: {
+      h1: "Drop me a message",
+      p: "I’m currently looking for internship opportunities as a software developer, along with freelance or collaboration projects. If you have any questions, project ideas, or opportunities, feel free to send a message. I’ll respond as soon as possible.",
+      labels: [
+        "Name",
+        "Surname",
+        "Email",
+        "Phone Number",
+        "Subject",
+        "Message",
+      ],
+      selects: [
+        "General Question",
+        "Technical Question",
+        "Job Opportunity",
+        "Internship Offer",
+        "Freelance Work",
+        "Feedback",
+        "Please Select",
+      ],
+      button: ["Loading", "Send"],
+      contactMe: "Contact Me",
+    },
+  };
   const [input, setInput] = useState({
     name: {
       letters: "",
@@ -33,10 +87,6 @@ export default function Home() {
       isBlur: false,
     },
   });
-
-  const [isOpenDropdown, setIsOpenDropdown] = useState(false);
-  const [selected, setSelected] = useState("");
-  const [isShaking, setIsShaking] = useState(false);
 
   function validate(input, selected) {
     const errors = {};
@@ -92,6 +142,7 @@ export default function Home() {
         text: { ...prev.text, isBlur: true },
       }));
       setIsOpenDropdown(false);
+      setSubjectTouched(true);
       setIsShaking(true);
       setTimeout(() => setIsShaking(false), 400);
       return;
@@ -134,16 +185,11 @@ export default function Home() {
   return (
     <>
       {isError && <p className={classes.backendError}>{error?.message}</p>}
-      <main className={classes.main} onClick={() => setIsOpenDropdown(false)}>
+      <div className={classes.div} onClick={() => setIsOpenDropdown(false)}>
         <div className={classes.contactContainer}>
           <div className={classes.contactText}>
-            <h1>Drop me a message</h1>
-            <p>
-              I’m currently looking for internship opportunities as a software
-              developer, along with freelance or collaboration projects. If you
-              have any questions, project ideas, or opportunities, feel free to
-              send a message. I’ll respond as soon as possible.
-            </p>
+            <h1>{texts[lang].h1}</h1>
+            <p>{texts[lang].p}</p>
           </div>
           <div className={classes.contactItem}>
             <Phone
@@ -174,10 +220,10 @@ export default function Home() {
           </div>
         </div>
         <form onSubmit={submitHandler} className={classes.form}>
-          <h1 className={classes.contactMe}>Contact Me</h1>
+          <h1 className={classes.contactMe}>{texts[lang].contactMe}</h1>
           <div className={classes.equal}>
             <div className={classes.labelInput}>
-              <label htmlFor="name">Name</label>
+              <label htmlFor="name">{texts[lang].labels[0]}</label>
               <Input
                 type="text"
                 name="name"
@@ -189,7 +235,7 @@ export default function Home() {
               />
             </div>
             <div className={classes.labelInput}>
-              <label htmlFor="surname">Surname</label>
+              <label htmlFor="surname">{texts[lang].labels[1]}</label>
               <Input
                 type="text"
                 name="surname"
@@ -202,7 +248,7 @@ export default function Home() {
             </div>
           </div>
           <div className={classes.labelInput}>
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">{texts[lang].labels[2]}</label>
             <Input
               type="email"
               name="email"
@@ -215,7 +261,7 @@ export default function Home() {
           </div>
           <div className={classes.equal}>
             <div className={classes.labelInput}>
-              <label htmlFor="phoneNumber">Phone Number</label>
+              <label htmlFor="phoneNumber">{texts[lang].labels[3]}</label>
               <Input
                 type="text"
                 name="phoneNumber"
@@ -228,17 +274,20 @@ export default function Home() {
               />
             </div>
             <div className={classes.labelInput}>
-              <label>Subject</label>
+              <label>{texts[lang].labels[4]}</label>
               <div
                 onClick={(event) => event.stopPropagation()}
-                className={`${classes.selectContainer} ${currentErrors.subject ? classes.error : ""} ${isShaking && currentErrors.subject ? classes.shake : ""}`}
+                className={`${classes.selectContainer} ${subjectTouched && currentErrors.subject ? classes.error : ""} ${isShaking && currentErrors.subject ? classes.shake : ""}`}
               >
                 <div
-                  onClick={() => setIsOpenDropdown((prev) => !prev)}
+                  onClick={() => {
+                    setIsOpenDropdown((prev) => !prev);
+                    setSubjectTouched(true);
+                  }}
                   className={classes.selectArrowContainer}
                 >
                   <h2 className={classes.pleaseSelect}>
-                    {selected === "" ? "Please Select" : selected}
+                    {selected === "" ? `${texts[lang].selects[6]}` : selected}
                   </h2>
                   <Button
                     type="button"
@@ -261,7 +310,7 @@ export default function Home() {
                           setIsOpenDropdown(false);
                         }}
                       >
-                        General Question
+                        {texts[lang].selects[0]}
                       </li>
                       <li
                         onClick={() => {
@@ -269,7 +318,7 @@ export default function Home() {
                           setIsOpenDropdown(false);
                         }}
                       >
-                        Technical Question
+                        {texts[lang].selects[1]}
                       </li>
                       <li
                         onClick={() => {
@@ -277,7 +326,7 @@ export default function Home() {
                           setIsOpenDropdown(false);
                         }}
                       >
-                        Job Opportunity
+                        {texts[lang].selects[2]}
                       </li>
                       <li
                         onClick={() => {
@@ -285,7 +334,7 @@ export default function Home() {
                             setIsOpenDropdown(false));
                         }}
                       >
-                        Internship Offer
+                        {texts[lang].selects[3]}
                       </li>
                       <li
                         onClick={() => {
@@ -293,14 +342,14 @@ export default function Home() {
                             setIsOpenDropdown(false));
                         }}
                       >
-                        Freelance Work
+                        {texts[lang].selects[4]}
                       </li>
                       <li
                         onClick={() => {
                           (setSelected("Feedback"), setIsOpenDropdown(false));
                         }}
                       >
-                        Feedback
+                        {texts[lang].selects[5]}
                       </li>
                     </ul>
                   </div>
@@ -309,7 +358,7 @@ export default function Home() {
             </div>
           </div>
           <div className={classes.labelInput}>
-            <label htmlFor="text">Message</label>
+            <label htmlFor="text">{texts[lang].labels[5]}</label>
             <textarea
               name="text"
               id="text"
@@ -321,10 +370,10 @@ export default function Home() {
             ></textarea>
           </div>
           <Button disabled={isPending}>
-            {isPending ? "Loading..." : "Send"}
+            {isPending ? texts[lang].button[0] : texts[lang].button[1]}
           </Button>
         </form>
-      </main>
+      </div>
     </>
   );
 }

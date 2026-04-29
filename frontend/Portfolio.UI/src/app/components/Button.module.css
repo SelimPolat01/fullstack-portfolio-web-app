@@ -19,7 +19,7 @@
 
 .button:hover {
   outline: none;
-  transform: scale(1.1);
+  transform: scale(1.5);
 }
 
 .cancelButton {
@@ -37,5 +37,4 @@
   cursor: pointer;
   outline: none;
   transform: scale(1.1);
-  font-weight: bold;
 }

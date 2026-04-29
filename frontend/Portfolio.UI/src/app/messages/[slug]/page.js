@@ -42,15 +42,15 @@ export default function Message() {
         </div>
         <div className={classes.sender}>
           <strong>{<Clock stroke="url(#magic-gradient)" />}</strong>
-          <span>{date.toLocaleString("tr-TR")}</span>
+          <span>{date.toLocaleString("tr-TR")}</span>{" "}
+          <span className={classes.isRead}>
+            {data?.result?.isRead ? (
+              <CheckCheck stroke="url(#gold-stroke)" />
+            ) : (
+              <Check stroke="url(#unread-gradient)" />
+            )}
+          </span>
         </div>
-        <span>
-          {data?.result?.isRead ? (
-            <Check stroke="url(#magic-gradient)" />
-          ) : (
-            <CheckCheck stroke="url(#magic-gradient)" />
-          )}
-        </span>
       </div>
     </div>
   );

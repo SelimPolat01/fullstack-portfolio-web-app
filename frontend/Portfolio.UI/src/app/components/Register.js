@@ -1,25 +1,25 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import Input from "./Input";
 import classes from "./Register.module.css";
 import Button from "./Button";
 import { useRouter } from "next/navigation";
 import ErrorMessage from "./ErrorMessage";
 import { usePostRegister } from "../../hooks/usePostRegister";
+import { LangContext } from "@/contexts/LangContext";
 
 export default function Register() {
   const router = useRouter();
   const { mutate, isPending, isError, error } = usePostRegister();
   const [isShaking, setIsShaking] = useState(false);
-
+  const { lang, toggleLang } = useContext(LangContext);
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       router.replace("/");
     }
   }, [router]);
-
   const [input, setInput] = useState({
     name: {
       letters: "",
@@ -46,6 +46,32 @@ export default function Register() {
       isBlur: false,
     },
   });
+  const texts = {
+    tr: {
+      h1: ["Kayıt Ol"],
+      labels: [
+        "İsim",
+        "Soyisim",
+        "Eposta",
+        "Telefon Numarası",
+        "Şifre",
+        "Şifreyi Onayla",
+      ],
+      button: ["Yükleniyor...", "Kayıt Ol"],
+    },
+    en: {
+      h1: ["Register"],
+      labels: [
+        "Name",
+        "Surname",
+        "Email",
+        "Phone Number",
+        "Password",
+        "Confirm Password",
+      ],
+      button: ["Loading...", "Register"],
+    },
+  };
 
   function validate(input) {
     const errors = {};
@@ -167,10 +193,10 @@ export default function Register() {
     <div className={classes.div}>
       {isError && <ErrorMessage message={error?.message} />}
       <form className={classes.form} onSubmit={submitHandler}>
-        <h1 className={classes.register}>Register</h1>
+        <h1 className={classes.register}>{texts[lang].h1}</h1>
         <div className={classes.fullName}>
           <div className={classes.labelInput}>
-            <label htmlFor="name">Name</label>
+            <label htmlFor="name">{texts[lang].labels[0]}</label>
             <Input
               type="text"
               name="name"
@@ -182,7 +208,7 @@ export default function Register() {
             />
           </div>
           <div className={classes.labelInput}>
-            <label htmlFor="surname">Surname</label>
+            <label htmlFor="surname">{texts[lang].labels[1]}</label>
             <Input
               type="text"
               name="surname"
@@ -195,7 +221,7 @@ export default function Register() {
           </div>
         </div>
         <div className={classes.labelInput}>
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email">{texts[lang].labels[2]}</label>
           <Input
             type="email"
             name="email"
@@ -207,7 +233,7 @@ export default function Register() {
           />
         </div>
         <div className={classes.labelInput}>
-          <label htmlFor="phoneNumber">Phone Number</label>
+          <label htmlFor="phoneNumber">{texts[lang].labels[3]}</label>
           <Input
             type="tel"
             name="phoneNumber"
@@ -220,7 +246,7 @@ export default function Register() {
           />
         </div>
         <div className={classes.labelInput}>
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">{texts[lang].labels[4]}</label>
           <Input
             type="password"
             name="password"
@@ -232,7 +258,7 @@ export default function Register() {
           />
         </div>
         <div className={classes.labelInput}>
-          <label htmlFor="confirmPassword">Confirm Password</label>
+          <label htmlFor="confirmPassword">{texts[lang].labels[5]}</label>
           <Input
             type="password"
             name="confirmPassword"
@@ -244,7 +270,7 @@ export default function Register() {
           />
         </div>
         <Button disabled={isPending}>
-          {isPending ? "Loading..." : "Register"}
+          {isPending ? texts[lang].button[0] : texts[lang].button[1]}
         </Button>
       </form>
     </div>

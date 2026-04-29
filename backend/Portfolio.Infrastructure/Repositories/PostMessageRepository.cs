@@ -4,11 +4,11 @@ using Portfolio.Infrastructure.DbContext;
 
 namespace Portfolio.Infrastructure.Repositories
 {
-    public class AddMessageRepository : IMessageAdderRepository
+    public class PostMessageRepository : IMessageAdderRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public AddMessageRepository(ApplicationDbContext db)
+        public PostMessageRepository(ApplicationDbContext db)
         {
             _db = db;
         }

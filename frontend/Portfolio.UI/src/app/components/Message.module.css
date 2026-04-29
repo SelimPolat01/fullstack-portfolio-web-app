@@ -27,9 +27,14 @@
   margin: 0;
 }
 
+.dateReadContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
 .date {
-  align-self: flex-end;
   opacity: 0.5;
   font-size: 12px;
   margin: 0;
+  align-self: center;
 }
