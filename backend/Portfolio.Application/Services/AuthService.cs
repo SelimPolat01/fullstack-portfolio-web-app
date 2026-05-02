@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using Portfolio.Application.DTO;
+using Portfolio.Application.DTO.Admin;
+using Portfolio.Application.DTO.Auth;
+using Portfolio.Application.DTO.Service;
 using Portfolio.Application.ServiceContracts;
 using Portfolio.Infrastructure.Identity;
 using System.IdentityModel.Tokens.Jwt;

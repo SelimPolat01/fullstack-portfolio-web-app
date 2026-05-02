@@ -1,4 +1,5 @@
-﻿using Portfolio.Application.DTO;
+﻿using Portfolio.Application.DTO.Message;
+using Portfolio.Application.DTO.Service;
 using Portfolio.Application.ServiceContracts;
 using Portfolio.Core.Domain.RepositoryContracts;
 
@@ -6,9 +7,9 @@ namespace Portfolio.Application.Services
 {
     public class MessageGetterService : IMessageGetterService
     {
-        private readonly IMessageGetherRepository _messageGetterRepository;
+        private readonly IMessageGetterRepository _messageGetterRepository;
 
-        public MessageGetterService(IMessageGetherRepository messageFetcherRepository)
+        public MessageGetterService(IMessageGetterRepository messageFetcherRepository)
         {
             _messageGetterRepository = messageFetcherRepository;
         }

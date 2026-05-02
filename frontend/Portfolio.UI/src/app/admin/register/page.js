@@ -1,7 +1,7 @@
 "use client";
 
 import { Lock } from "lucide-react";
-import Register from "../../components/Register";
+import Register from "@/app/components/Register/Register";
 import classes from "./Register.module.css";
 import { useContext } from "react";
 import { LangContext } from "@/contexts/LangContext";

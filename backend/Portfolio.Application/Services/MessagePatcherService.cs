@@ -1,4 +1,4 @@
-﻿using Portfolio.Application.DTO;
+﻿using Portfolio.Application.DTO.Service;
 using Portfolio.Application.ServiceContracts;
 using Portfolio.Core.Domain.RepositoryContracts;
 

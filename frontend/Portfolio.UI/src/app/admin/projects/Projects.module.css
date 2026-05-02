@@ -1,0 +1,389 @@
+.div {
+  display: flex;
+  width: 100%;
+}
+
+.userMenu {
+  position: fixed;
+  left: 0%;
+  top: 11%;
+  display: flex;
+  flex-direction: column;
+  width: 264px;
+  z-index: 900;
+  align-items: flex-start;
+  gap: 1rem;
+  min-height: 100vh;
+  background-color: #c88ea5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23e2748c' fill-opacity='0.85' d='M0,224L48,208C96,192,192,160,288,165.3C384,171,480,213,576,213.3C672,213,768,171,864,154.7C960,139,1056,149,1152,176C1248,203,1344,245,1392,266.7L1440,288L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.userMenuWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 0.5rem;
+  padding: 1rem 0;
+}
+
+.imageContainer {
+  margin: 0 0 0.5rem 0;
+  border-radius: 50%;
+  height: 150px;
+  width: 150px;
+  overflow: hidden;
+}
+
+.userInfoContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  width: 80%;
+}
+
+.userInfoContainer h2 {
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
+  color: #f8f8f8;
+  font-weight: 400;
+}
+
+.userInfoContainer p {
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  color: #f8f8f8;
+  font-weight: 200;
+}
+
+.optionsHr {
+  width: 80%;
+  margin: 0 0 1rem 0;
+}
+
+.optionsHr h3 {
+  margin: 0;
+  padding: 0;
+  color: #f8f8f8;
+  font-weight: 300;
+  font-size: 14px;
+}
+
+.hr {
+  width: 100%;
+  border: none;
+  height: 3px;
+  background-color: #f8f8f8;
+  opacity: 0.3;
+}
+
+.optionsMenuContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 65%;
+}
+
+.optionContainer {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.optionContainer a {
+  color: #f8f8f8;
+  text-decoration: none;
+  transition: transform 0.25s ease-in;
+}
+
+.optionContainer a:hover {
+  transform: scale(1.05);
+}
+
+.projectMenu {
+  position: fixed;
+  left: 264px;
+  top: 11%;
+  display: flex;
+  flex-direction: column;
+  min-width: 489px;
+  z-index: 900;
+  align-items: flex-start;
+  background-color: #4d4a58;
+  min-height: 100vh;
+  box-sizing: border-box;
+  height: 89vh;
+  border-top-right-radius: 12px;
+}
+
+.projectCartContainer {
+  display: flex;
+  gap: 0.7rem;
+  align-items: center;
+  width: 100%;
+  background-color: #1a102b;
+  justify-content: space-between;
+  flex-direction: column;
+  flex-grow: 1;
+  box-sizing: border-box;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  padding: 1.5rem 1.5rem 6rem 1.5rem;
+}
+
+.projectCart {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sortContainer {
+  display: flex;
+  gap: 0.7rem;
+  align-items: center;
+  width: 100%;
+  background-color: #150a29;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  box-sizing: border-box;
+  border-top-right-radius: 12px;
+}
+
+.sortContainer strong {
+  color: #f8f8f8;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.sortContainer p {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  color: #f8f8f8;
+  font-weight: 300;
+  font-size: 16px;
+}
+
+.sort {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.dateContainer {
+  background-color: #241b36;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  align-items: center;
+  line-height: 1;
+  display: flex;
+}
+
+.filter {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.project {
+  position: fixed;
+  left: 699px;
+  top: 11%;
+  right: 0%;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  align-items: flex-start;
+  background-color: rgb(34, 26, 52);
+  min-height: 100vh;
+  box-sizing: border-box;
+  align-items: center;
+  height: 89vh;
+}
+
+.button {
+  width: auto;
+  height: auto;
+}
+
+.deepOcean {
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+}
+
+.midnightBlue {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.sunsetEmber {
+  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+}
+
+.emeraldHealth {
+  background: linear-gradient(135deg, #11998e, #38ef7d);
+}
+
+.cyberpunkNeon {
+  background: linear-gradient(135deg, #ee0979, #ff6a00);
+}
+
+.minimalistGrey {
+  background: linear-gradient(135deg, #bdc3c7, #2c3e50);
+}
+
+.royalBlue {
+  background: linear-gradient(
+    135deg,
+    #051937,
+    #004d7a,
+    #008793,
+    #00bf72,
+    #a8eb12
+  );
+}
+
+.softyCandy {
+  background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+}
+
+.blackPearl {
+  background: linear-gradient(135deg, #232526, #414345);
+}
+
+.articFrost {
+  background: linear-gradient(135deg, #e1eec3, #f05053);
+}
+
+.inlineInput {
+  background-color: #ffbdd8;
+  border: 1px solid #f8f8f8;
+  margin: 0;
+  padding: 0;
+  border-radius: 6px;
+  outline: none;
+}
+
+.inlineInput:focus {
+  outline: none;
+}
+
+.editableNameInput,
+.editableJobInput {
+  background-color: #ff9bb9;
+  border: none;
+  outline: none;
+  color: #f8f8f8;
+  padding: 0;
+  margin: 0;
+  font-family: inherit;
+}
+
+.editableNameInput {
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.editableJobInput {
+  font-size: 14px;
+  font-weight: 200;
+}
+
+.sortDiv {
+  cursor: pointer;
+  position: relative;
+}
+
+.sortButtonsContainer,
+.filterButtonsContainer {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  gap: 0.1rem;
+  background-color: #241b36;
+  border-radius: 10px;
+  padding: 0.4rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(248, 248, 248, 0.1);
+  z-index: 1000;
+}
+
+.sortButtonsContainer {
+  top: 130%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: max-content;
+}
+
+.sortButtonsContainer button,
+.filterButtonsContainer button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  color: #f8f8f8;
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  transition: all 0.2s ease-in-out;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.sortButtonsContainer button:hover,
+.filterButtonsContainer button:hover {
+  background-color: rgba(248, 248, 248, 0.1);
+  color: #f8f8f8;
+  transform: translateX(3px);
+}
+
+.sortArrow {
+  margin-left: 12px;
+  font-size: 16px;
+  color: #e2748c;
+}
+
+.filterDiv {
+  position: relative;
+  cursor: pointer;
+}
+
+.filterButtonsContainer {
+  top: 130%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: max-content;
+}
+
+.clearFilterContainer {
+  padding: 0 !important;
+}
+
+.filterButtonsContainer > * {
+  padding: 0.4rem 0 0.4rem 0.8rem;
+}
+
+.categoryContainer,
+.statusContainer {
+  padding: 0 12.8px;
+}
+
+.filterActive {
+  background-color: #e2748c !important;
+  color: #f8ffb8 !important;
+}
+
+.filter {
+  color: #f8ffb8 !important;
+}
+
+.hidden {
+  visibility: hidden;
+}

@@ -27,12 +27,20 @@ builder.Services.AddCors(options =>
         policyBuilder.AllowCredentials();
     });
 });
-builder.Services.AddScoped<IMessageGetherRepository, GetMessageRepository>();
-builder.Services.AddScoped<IMessageAdderRepository, PostMessageRepository>();
-builder.Services.AddScoped<IMessagePatcherRepository, PatchMessageRepository>();
+builder.Services.AddScoped<IMessageGetterRepository, MessageGetterRepository>();
+builder.Services.AddScoped<IMessageAdderRepository, MessageAdderRepository>();
+builder.Services.AddScoped<IMessagePatcherRepository, MessagePatcherRepository>();
+builder.Services.AddScoped<IProjectAdderRepository, ProjectAdderRepository>();
+builder.Services.AddScoped<IProjectGetterRepository, ProjectGetterRepository>();
+builder.Services.AddScoped<IProjectPutterRepository, ProjectPutterRepository>();
+builder.Services.AddScoped<IProjectDeleterRepository, ProjectDeleterRepository>();
 builder.Services.AddScoped<IMessageGetterService, MessageGetterService>();
 builder.Services.AddScoped<IMessageAdderService, MessageAdderService>();
 builder.Services.AddScoped<IMessagePatcherService, MessagePatcherService>();
+builder.Services.AddScoped<IProjectAdderService, ProjectAdderService>();
+builder.Services.AddScoped<IProjectGetterService, ProjectGetterService>();
+builder.Services.AddScoped<IProjectPutterService, ProjectPutterService>();
+builder.Services.AddScoped<IProjectDeleterService, ProjectDeleterService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
@@ -81,9 +89,11 @@ builder.Services.AddAuthorization(options =>
         });
     });
 });
+
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
+app.UseStaticFiles();
 
 if (app.Environment.IsDevelopment())
 {

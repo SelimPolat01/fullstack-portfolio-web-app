@@ -8,6 +8,7 @@ namespace Portfolio.Infrastructure.DbContext
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {
         public virtual DbSet<Message> Messages { get; set; }
+        public virtual DbSet<Project> Projects { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> dbContextOptionsBuilder) : base(dbContextOptionsBuilder)
         {
@@ -18,6 +19,7 @@ namespace Portfolio.Infrastructure.DbContext
         {
             base.OnModelCreating(builder);
             builder.Entity<Message>().ToTable("Messages");
+            builder.Entity<Project>().ToTable("Projects");
         }
     }
 }

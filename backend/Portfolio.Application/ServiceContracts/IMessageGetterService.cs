@@ -1,4 +1,5 @@
-﻿using Portfolio.Application.DTO;
+﻿using Portfolio.Application.DTO.Message;
+using Portfolio.Application.DTO.Service;
 
 namespace Portfolio.Application.ServiceContracts
 {

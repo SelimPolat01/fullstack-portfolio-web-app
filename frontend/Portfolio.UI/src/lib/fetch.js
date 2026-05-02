@@ -8,16 +8,30 @@ export async function Fetch(
   const url = param2
     ? `https://localhost:7178/api/${param1}/${param2}`
     : `https://localhost:7178/api/${param1}`;
+
+  const isFormData = body instanceof FormData;
+
+  const headers = {
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+
+  if (!isFormData) {
+    headers["Content-Type"] = "application/json";
+  }
+
   const response = await fetch(url, {
     method: method,
-    headers: {
-      "Content-Type": "application/json",
-
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-    body: method !== "GET" && body ? JSON.stringify(body) : undefined,
+    headers: headers,
+    body:
+      method !== "GET" && body
+        ? isFormData
+          ? body
+          : JSON.stringify(body)
+        : undefined,
   });
+
   const result = await response.json();
+
   if (!response.ok)
     throw {
       ok: false,
@@ -25,5 +39,6 @@ export async function Fetch(
       message: result.message,
       data: result,
     };
+
   return { result: result, status: response.status };
 }

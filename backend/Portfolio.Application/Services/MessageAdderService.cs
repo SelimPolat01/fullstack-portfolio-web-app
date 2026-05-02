@@ -1,4 +1,5 @@
-﻿using Portfolio.Application.DTO;
+﻿using Portfolio.Application.DTO.Message;
+using Portfolio.Application.DTO.Service;
 using Portfolio.Core.Domain.Entities;
 using Portfolio.Core.Domain.RepositoryContracts;
 using Portfolio.Core.Helpers;

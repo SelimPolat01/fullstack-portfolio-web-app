@@ -1,0 +1,139 @@
+.nav {
+  display: flex;
+  flex-direction: row;
+  margin: 1rem 0 0 0;
+  position: fixed;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  z-index: 1000;
+}
+
+.firstFlex {
+  display: flex;
+  width: 30%;
+  justify-content: space-evenly;
+  gap: 5rem;
+  position: relative;
+  margin: 0 0 0 3rem;
+}
+
+.lastFlex {
+  display: flex;
+  width: 70%;
+  justify-content: flex-end;
+  gap: 5rem;
+  margin: 0 3rem 0 0;
+}
+
+.active {
+  color: #ff6b6b;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.link {
+  color: #f8f8f8;
+  text-decoration: none;
+  transition: transform 0.25s ease-in;
+}
+
+.link:hover {
+  transform: scale(1.1);
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.menuWrapper:hover .menuPanel {
+  visibility: visible;
+  opacity: 1;
+}
+
+.menuWrapper svg {
+  color: #f8f8f8;
+}
+
+.menuPanel {
+  position: fixed;
+  top: 0%;
+  left: 0%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  width: 20vw;
+  backdrop-filter: blur(6px);
+  padding: 2rem 0 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  visibility: hidden;
+  opacity: 0;
+  z-index: 2000;
+  transition: all 0.5s ease-in;
+  margin: 0;
+}
+
+.menuLink {
+  font-size: 26px;
+  text-decoration: none;
+  color: #f8f8f8;
+  transition:
+    color 0.5s ease-in-out,
+    transform 0.5s ease-in-out;
+  display: inline-block;
+}
+
+.menuLink:hover {
+  background: linear-gradient(
+    105.66deg,
+    #00f4ff 16.76%,
+    #68ffed 46.39%,
+    #9867ff 76.01%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+  width: max-content;
+}
+
+.menuList {
+  height: 20px;
+  padding: 0.5rem 0;
+  list-style: none;
+}
+
+.menuList button:hover {
+  transform: none;
+  background: linear-gradient(
+    105.66deg,
+    #00f4ff 16.76%,
+    #68ffed 46.39%,
+    #9867ff 76.01%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+  color: #f8f8f8;
+  font-size: 26px;
+}
+
+.logoutText {
+  color: #f8f8f8;
+  font-size: 26px;
+}
+
+.unreadLength {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: inline-block;
+  font-size: 20px;
+  background-color: #ff4e50;
+  color: #f8f8f8;
+  text-align: center;
+}

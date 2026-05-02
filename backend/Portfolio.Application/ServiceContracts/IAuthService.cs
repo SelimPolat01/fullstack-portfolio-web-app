@@ -1,4 +1,6 @@
-﻿using Portfolio.Application.DTO;
+﻿using Portfolio.Application.DTO.Admin;
+using Portfolio.Application.DTO.Auth;
+using Portfolio.Application.DTO.Service;
 using Portfolio.Infrastructure.Identity;
 
 namespace Portfolio.Application.ServiceContracts

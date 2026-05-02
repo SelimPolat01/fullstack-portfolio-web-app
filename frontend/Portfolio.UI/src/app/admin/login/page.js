@@ -1,7 +1,7 @@
 "use client";
 
 import { Key } from "lucide-react";
-import Login from "../../components/Login";
+import Login from "@/app/components/Login/Login";
 import classes from "./Login.module.css";
 import { useContext } from "react";
 import { LangContext } from "@/contexts/LangContext";

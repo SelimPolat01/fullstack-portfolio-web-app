@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Portfolio.Application.DTO;
+using Portfolio.Application.DTO.Message;
 using Portfolio.Application.ServiceContracts;
 using Portfolio.Core.ServiceContracts;
 using System.IdentityModel.Tokens.Jwt;

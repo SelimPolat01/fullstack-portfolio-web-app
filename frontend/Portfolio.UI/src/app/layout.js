@@ -1,6 +1,6 @@
 import "./globals.css";
 import ReactQuery from "../lib/reactQuery";
-import ConditionalNavbar from "./components/ConditionalNavbar";
+import ConditionalNavbar from "./components/ConditionalNavbar/ConditionalNavbar";
 import { LangProvider } from "@/contexts/LangContext";
 
 export const metadata = {

@@ -1,0 +1,17 @@
+.textarea {
+  border-radius: 12px;
+  color: inherit;
+  outline: none;
+  font-size: 20px;
+  background-color: #150a29;
+  resize: none;
+  padding: 12px 16px;
+}
+
+.textarea:focus {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(#150a29, #150a29) padding-box,
+    linear-gradient(105.66deg, #00f4ff, #68ffed, #9867ff) border-box;
+  outline: none;
+}
