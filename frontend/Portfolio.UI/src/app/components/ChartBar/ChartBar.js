@@ -6,6 +6,8 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import { LangContext } from "@/contexts/LangContext";
 import { useGetProjects } from "@/hooks/GET/useGetProjects";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { chartVariants } from "@/lib/variants";
 
 export default function ChartBar({ text, optionsIcon, width, height }) {
   const { lang, toggleLang } = useContext(LangContext);
@@ -71,7 +73,7 @@ export default function ChartBar({ text, optionsIcon, width, height }) {
   }
 
   return (
-    <div className={classes.div}>
+    <motion.div variants={chartVariants} className={classes.div}>
       <div className={classes.divContainer}>
         <div className={classes.textOptionsContainer}>
           <h1 className={classes.text}>{text}</h1>
@@ -91,6 +93,6 @@ export default function ChartBar({ text, optionsIcon, width, height }) {
           </BarChart>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

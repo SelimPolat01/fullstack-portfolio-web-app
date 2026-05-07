@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 
 export default function AddProject() {
   const router = useRouter();
+  const [isSuccess, setIsSuccess] = useState(false);
   const [token, setToken] = useState(null);
   useEffect(() => {
     const currentToken = localStorage.getItem("token");
@@ -24,8 +25,11 @@ export default function AddProject() {
         body: formData,
       },
       {
-        onSuccess: (data) => {
-          router.push("/admin/projects");
+        onSuccess: () => {
+          setIsSuccess(true);
+          if (isSuccess == null) {
+            router.push("/admin/projects");
+          }
         },
         onError: (err) => {
           console.log(err);
@@ -40,7 +44,9 @@ export default function AddProject() {
     <div className={classes.div}>
       <ProjectForm
         onSubmitForm={submitHandler}
-        isLoading={isPending}
+        isPending={isPending}
+        isSuccess={isSuccess}
+        setIsSuccess={setIsSuccess}
         addProject
       />
     </div>

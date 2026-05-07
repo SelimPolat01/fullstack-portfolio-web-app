@@ -1,0 +1,111 @@
+.div {
+  display: flex;
+  flex-direction: column;
+  padding: 24px 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: center;
+  margin: 2rem 0 0 0;
+}
+
+.pageHeaderContainer {
+  padding: 0 0 0 74px;
+  align-self: flex-start;
+}
+
+.pageHeader {
+  font-size: 32px;
+  margin-bottom: 24px;
+  font-weight: 600;
+  font-size: 32px;
+  width: max-content;
+  background: linear-gradient(
+    105.66deg,
+    #00f4ff 16.76%,
+    #68ffed 46.39%,
+    #9867ff 76.01%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+
+.formWrapper {
+  width: 100%;
+  max-width: 1000px;
+  padding: 2rem;
+  background: #150a29;
+  border: 1px solid #4b336b;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  width: 100%;
+}
+
+.fullWidth {
+  grid-column: span 2 !important;
+}
+
+.pageDescriptionContainer {
+  grid-column: 1;
+}
+
+.socialMediaContainer {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.labelInput {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  width: 100%;
+}
+
+.labelInput label {
+  color: #a9a3b0;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.labelInput input,
+.labelInput textarea {
+  background-color: #0b0517;
+  border: 1px solid #4b336b;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  font-family: inherit;
+}
+
+.pageDescription {
+  height: 200px;
+  resize: vertical;
+}
+
+.buttonArea {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 900px) {
+  .form {
+    grid-template-columns: 1fr;
+  }
+  .fullWidth,
+  .pageDescriptionContainer,
+  .socialMediaContainer {
+    grid-column: 1 / -1;
+  }
+}

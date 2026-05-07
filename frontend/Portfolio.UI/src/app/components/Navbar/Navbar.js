@@ -42,8 +42,8 @@ export default function Navbar() {
       links: [
         { path: "/admin/dashboard", text: "Kontrol Paneli" },
         { path: "/admin/messages", text: "Mesajlar" },
-        { path: "/admin/works", text: "Çalışmalar" },
         { path: "/admin/projects", text: "Projeler" },
+        { path: "/admin/works", text: "Çalışmalar" },
         { path: "/admin/settings", text: "Ayarlar" },
         { path: "/admin/status", text: "Durum" },
       ],
@@ -53,8 +53,8 @@ export default function Navbar() {
       links: [
         { path: "/admin/dashboard", text: "Dashboard" },
         { path: "/admin/messages", text: "Messages" },
-        { path: "/admin/works", text: "Works" },
         { path: "/admin/projects", text: "Projects" },
+        { path: "/admin/works", text: "Works" },
         { path: "/admin/settings", text: "Settings" },
         { path: "/admin/status", text: "Status" },
       ],

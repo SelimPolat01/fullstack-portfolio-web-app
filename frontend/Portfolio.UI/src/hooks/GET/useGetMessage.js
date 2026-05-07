@@ -9,6 +9,6 @@ export function useGetMessage(token, messageId) {
   return useQuery({
     queryKey: ["message", token, messageId],
     queryFn: () => getMessage(token, messageId),
-    enabled: !!token && !!messageId,
+    enabled: !!token && token !== undefined && token !== "",
   });
 }

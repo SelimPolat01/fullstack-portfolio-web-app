@@ -5,7 +5,7 @@
   align-items: center;
   gap: 1rem;
   width: 100%;
-  min-height: 100vh;
+  height: max-content;
   padding: 2rem;
   box-sizing: border-box;
 }
@@ -50,7 +50,16 @@
 .shortTextArea,
 .longTextArea {
   width: 600px;
-  max-width: 100%;
+}
+
+.labelInputContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.labelInputContainer .labelInput {
+  margin: 0;
 }
 
 .labelInput {
@@ -75,8 +84,8 @@ input:focus.error,
 .featureContainer.error,
 .input.error:focus,
 .textarea.error:focus {
-  border: 1px solid #e71818;
-  color: #e71818;
+  border: 1px solid #f00000;
+  color: #f00000;
   caret-color: white;
   outline: none;
 }
@@ -109,6 +118,7 @@ input:focus.error,
 .selectDiv {
   display: flex;
   gap: 1.5rem;
+  margin: 0 0 1.5rem 0;
 }
 
 .selectArrowContainer {
@@ -188,6 +198,7 @@ input:focus.error,
   background: none;
   overflow: hidden;
   cursor: pointer;
+  margin: 0 0 0.5rem 0;
 }
 
 .preview {
@@ -201,7 +212,7 @@ input:focus.error,
 }
 
 .backendError {
-  color: #e71818;
+  color: #f00000;
 }
 
 .tagWrapper {
@@ -211,10 +222,10 @@ input:focus.error,
 }
 
 .tagContainer {
-  padding: 1.4rem 1rem;
+  padding: 1.4rem 1rem 0.9rem 1rem;
   border: 1px solid white;
   border-radius: 12px;
-  max-width: 100%;
+  width: 600px;
   box-sizing: border-box;
 }
 
@@ -230,15 +241,16 @@ input:focus.error,
   box-sizing: border-box;
   width: 100%;
   height: 45.6px;
+  margin: 0 0 0.5rem 0;
 }
 
 .featureContainer {
-  padding: 1.4rem 1rem;
+  padding: 1.4rem 1rem 0.9rem 1rem;
   border: 1px solid white;
   border-radius: 12px;
-  max-width: 100%;
+  width: 600px;
   box-sizing: border-box;
-  margin: 0 0 1.5rem 0;
+  margin: 0 0 0.5rem 0;
 }
 
 .tagDiv {
@@ -248,7 +260,7 @@ input:focus.error,
   background: #fff;
   border-radius: 8px;
   transition: background-color 0.25s ease-in;
-  margin: 0 0 1.42rem 0;
+  margin: 0 0 0.5rem 0;
   cursor: pointer;
 }
 
@@ -270,11 +282,11 @@ input:focus.error,
 .tagButton:hover .tagDiv {
   border: none;
   outline: none;
-  background-color: #e71818;
+  background-color: #f00000;
 }
 
 .tagDiv:hover {
-  background-color: #e71818;
+  background-color: #f00000;
   color: #f8f8f8;
 }
 
@@ -306,6 +318,7 @@ input:focus.error,
   background-color: #150a29;
   border: 1px solid whitesmoke;
   box-sizing: border-box;
+  margin: 0 0 0.5rem 0;
 }
 
 .dateContainer :global(.react-datepicker) {

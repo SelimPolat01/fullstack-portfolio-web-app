@@ -15,7 +15,7 @@ namespace Portfolio.Infrastructure.Repositories
         }
         public async Task<List<Message>> GetAllMessagesAsync()
         {
-            return await _db.Messages.ToListAsync();
+            return await _db.Messages.OrderByDescending(message => message.CreatedAt).ToListAsync();
         }
 
         public async Task<Message?> GetMessageAsync(Guid messageId)

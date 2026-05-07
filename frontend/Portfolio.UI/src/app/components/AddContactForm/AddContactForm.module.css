@@ -5,17 +5,27 @@
   color: #fafafa;
 }
 
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+.formWrapper {
   width: 600px;
+  min-height: 480px;
   padding: 2rem;
   background: #150a29;
   border: 1px solid #4b336b;
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
   color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1rem 0 0 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  height: 100%;
 }
 
 .equal {
@@ -57,8 +67,8 @@ textarea.error,
 input:focus.error,
 .input.error:focus,
 .textarea.error:focus {
-  border: 1px solid #e71818;
-  color: #e71818;
+  border: 1px solid #f00000;
+  color: #f00000;
   caret-color: white;
   outline: none;
 }
@@ -184,5 +194,5 @@ input:focus.error,
 }
 
 .backendError {
-  color: #e71818;
+  color: #f00000;
 }

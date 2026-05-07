@@ -8,6 +8,12 @@ import { useRouter } from "next/navigation";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import { usePostLogin } from "@/hooks/POST/usePostLogin";
 import { LangContext } from "@/contexts/LangContext";
+import { motion } from "framer-motion";
+import {
+  formElementVariants,
+  formVariants,
+  textVariants,
+} from "@/lib/variants";
 
 export default function Login() {
   const router = useRouter();
@@ -46,13 +52,18 @@ export default function Login() {
 
   function validate(input) {
     const errors = {};
-    if (
-      !input.email.letters.trim() ||
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.email.letters)
-    )
-      errors.email = "Email is invalid format";
-    if (!input.password.letters.trim() || input.password.letters.length < 5)
-      errors.password = "Password is invalid format.";
+    const email = input.email.letters.trim();
+    const password = input.password.letters;
+    if (!email) {
+      errors.email = "Email is required.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errors.email = "Email format is invalid.";
+    }
+    if (!password.trim()) {
+      errors.password = "Password is required.";
+    } else if (password.length < 5) {
+      errors.password = "Password must be at least 5 characters.";
+    }
     return errors;
   }
 
@@ -122,8 +133,6 @@ export default function Login() {
         },
         onError: (err) => {
           console.log(err);
-          router.replace("/error");
-          return;
         },
       },
     );
@@ -132,9 +141,20 @@ export default function Login() {
   return (
     <div className={classes.div}>
       {isError && <ErrorMessage message={error?.message} />}
-      <form className={classes.form} onSubmit={submitHandler}>
-        <h1 className={classes.login}>{texts[lang].h1}</h1>
-        <div className={classes.labelInput}>
+      <motion.form
+        variants={formVariants}
+        initial="hidden"
+        animate="visible"
+        className={classes.form}
+        onSubmit={submitHandler}
+      >
+        <motion.h1 variants={textVariants} className={classes.login}>
+          {texts[lang].h1}
+        </motion.h1>
+        <motion.div
+          variants={formElementVariants}
+          className={classes.labelInput}
+        >
           <label htmlFor="email">{texts[lang].labels[0]}</label>
           <Input
             type="email"
@@ -145,8 +165,14 @@ export default function Login() {
             onBlur={blurHandler}
             value={input.email.letters}
           />
-        </div>
-        <div className={classes.labelInput}>
+          {input.email.isBlur && currentErrors.email && (
+            <span className="errorSpan">{currentErrors.email}</span>
+          )}
+        </motion.div>
+        <motion.div
+          variants={formElementVariants}
+          className={classes.labelInput}
+        >
           <label htmlFor="password">{texts[lang].labels[1]}</label>
           <Input
             type="password"
@@ -157,11 +183,16 @@ export default function Login() {
             onBlur={blurHandler}
             value={input.password.letters}
           />
-        </div>
-        <Button disabled={isPending}>
-          {isPending ? texts[lang].button[0] : texts[lang].button[1]}
-        </Button>
-      </form>
+          {input.password.isBlur && currentErrors.password && (
+            <span className="errorSpan">{currentErrors.password}</span>
+          )}
+        </motion.div>
+        <motion.div variants={formElementVariants}>
+          <Button disabled={isPending} whileTap={{ scale: 0.95 }}>
+            {isPending ? texts[lang].button[0] : texts[lang].button[1]}
+          </Button>
+        </motion.div>
+      </motion.form>
     </div>
   );
 }

@@ -6,7 +6,7 @@
 .userMenu {
   position: fixed;
   left: 0%;
-  top: 11%;
+  top: 76px;
   display: flex;
   flex-direction: column;
   width: 264px;
@@ -108,7 +108,7 @@
 .projectMenu {
   position: fixed;
   left: 264px;
-  top: 11%;
+  top: 76px;
   display: flex;
   flex-direction: column;
   min-width: 489px;

@@ -1,13 +1,10 @@
 "use client";
 
 import Image from "next/image";
-
 import classes from "./Projects.module.css";
-
 import Link from "next/link";
-
 import Button from "../../components/Button/Button";
-
+import { motion, AnimatePresence, scale, animate } from "framer-motion";
 import {
   Download,
   ListFilter,
@@ -15,17 +12,27 @@ import {
   SlidersHorizontal,
   SquarePen,
 } from "lucide-react";
-
 import ProjectCart from "../../components/ProjectCard/ProjectCard";
 import Project from "../../components/Project/Project";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { LangContext } from "@/contexts/LangContext";
 import { useGetProjects } from "@/hooks/GET/useGetProjects";
+import ConfirmModal from "@/app/components/ConfirmModal/ConfirmModal";
+import { useDeleteProject } from "@/hooks/DELETE/useDeleteProject";
+import { useGetPersonalInfos } from "@/hooks/GET/useGetPersonalInfos";
+import { usePutPersonalInfos } from "@/hooks/PUT/usePutPersonalInfos";
 
 export default function Home() {
   const [clickProject, setClickProject] = useState(false);
   const [projectStyles, setProjectStyles] = useState({});
-
+  const dialogRef = useRef();
+  const {
+    mutate: deleteMutate,
+    isPending: deleteIsPending,
+    isError: deleteIsError,
+    error: deleteError,
+  } = useDeleteProject();
+  const [projectToDelete, setProjectToDelete] = useState(null);
   const [token, setToken] = useState(null);
   useEffect(() => {
     const currentToken = localStorage.getItem("token");
@@ -33,10 +40,29 @@ export default function Home() {
       setToken(currentToken);
     }
   }, []);
+
+  const {
+    data: getPersonalInfosData,
+    isLoading: getPersonalInfosIsLoading,
+    isError: getPersonalInfosIsError,
+    error: getPersonalInfosError,
+  } = useGetPersonalInfos(token);
+
   const [profile, setProfile] = useState({
-    name: "Selim POLAT",
-    job: "Full Stack & ML Developer",
+    fullName: "",
+    job: "",
   });
+
+  useEffect(() => {
+    if (getPersonalInfosData?.result) {
+      const { name, surname, title } = getPersonalInfosData.result;
+      setProfile({
+        fullName: `${name || ""} ${surname || ""}`.trim(),
+        job: title || "",
+      });
+    }
+  }, [getPersonalInfosData]);
+
   const [visible, setVisible] = useState({
     input: false,
     sort: false,
@@ -61,6 +87,53 @@ export default function Home() {
     filter.status,
   );
 
+  const {
+    mutate: putPersonalInfosMutate,
+    isPending: putPersonalInfosIsPending,
+    isError: putPersonalInfosIsError,
+    error: putPersonalInfosError,
+  } = usePutPersonalInfos();
+
+  useEffect(() => {
+    if (data?.result) {
+      const styles = {};
+      data.result.forEach((project) => {
+        const randomIndex = Math.floor(
+          Math.random() * projectCartGradientClasses.length,
+        );
+        styles[project.id] = projectCartGradientClasses[randomIndex];
+      });
+      setProjectStyles(styles);
+    }
+  }, [data]);
+
+  function handleProfileUpdate() {
+    if (!token || !getPersonalInfosData?.result) return;
+    const existingData = getPersonalInfosData.result;
+    const nameParts = profile.fullName.trim().split(" ");
+    const surnameToSend = nameParts.length > 1 ? nameParts.pop() : "";
+    const nameToSend = nameParts.join(" ");
+    putPersonalInfosMutate(
+      {
+        token: token,
+        body: {
+          ...existingData,
+          name: nameToSend,
+          surname: surnameToSend,
+          title: profile.job,
+        },
+      },
+      {
+        onSuccess: () => {
+          setVisible((prev) => ({ ...prev, input: false }));
+        },
+        onError: (err) => {
+          console.log("Profile update failed:", err.message);
+        },
+      },
+    );
+  }
+
   const texts = {
     tr: {
       p: "Tam Yığın & Makine Öğrenimi Geliştiricisi",
@@ -72,14 +145,34 @@ export default function Home() {
       ],
       sorts: ["Sıralama", "Tarih", "İsim", "Oluşturucu", "Kategori"],
       filters: ["Kategori", "Durum"],
+      categories: [
+        "Tam Yığın",
+        "Arka Uç",
+        "Ön Uç",
+        "Derin Öğrenme",
+        "Makine Öğrenmesi",
+        "Mobil Uygulama",
+        "Siber Güvenlik",
+      ],
       status: ["Bitti", "Bitmedi"],
+      loading: "Projeler Yükleniyor...",
     },
     en: {
       p: "Full Stack & ML Developer",
       options: ["OPTIONS", "Add New Project", "Edit Profile", "Download CV"],
       sorts: ["Sort by", "Date", "Name", "Creator", "Category"],
       filters: ["Category", "Status"],
+      categories: [
+        "Full Stack",
+        "Backend",
+        "Frontend",
+        "Deep Learning",
+        "Machine Learning",
+        "Mobile Application",
+        "Cyber Security",
+      ],
       status: ["Finished", "Not Finished"],
+      loading: "Loading Projects...",
     },
   };
 
@@ -109,19 +202,6 @@ export default function Home() {
     ];
   }, []);
 
-  useEffect(() => {
-    if (data?.result) {
-      const styles = {};
-      data.result.forEach((project) => {
-        const randomIndex = Math.floor(
-          Math.random() * projectCartGradientClasses.length,
-        );
-        styles[project.id] = projectCartGradientClasses[randomIndex];
-      });
-      setProjectStyles(styles);
-    }
-  }, [data]);
-
   function openProjectPanel(projectId) {
     setClickProject(true);
     setClickedProjectId(projectId);
@@ -137,8 +217,71 @@ export default function Home() {
     setVisible({ sort: false, filter: false });
   }
 
+  function confirmDeleteHandler() {
+    if (!projectToDelete) return;
+    deleteMutate(
+      { token: token, projectId: projectToDelete },
+      {
+        onSuccess: () => {
+          dialogRef.current?.close();
+          setProjectToDelete(null);
+        },
+      },
+    );
+  }
+
+  function cancelDeleteHandler() {
+    dialogRef.current?.close();
+    setProjectToDelete(null);
+  }
+
+  function handleDeleteClick(projectId) {
+    setProjectToDelete(projectId);
+  }
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+      },
+    },
+  };
+
+  if (isLoading) {
+    return (
+      <div className="loadingContainer">
+        <p>{texts[lang].loading}</p>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="loadingContainer">
+        <p>{error?.message || "An error occured"}</p>
+      </div>
+    );
+  }
+
   return (
-    <div className={classes.div}>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className={classes.div}
+    >
+      <AnimatePresence>
+        <ConfirmModal
+          isOpen={!!projectToDelete}
+          text="Are you sure you would like to do this?"
+          title="Delete"
+          onConfirm={confirmDeleteHandler}
+          onCancel={cancelDeleteHandler}
+          ref={dialogRef}
+        />
+      </AnimatePresence>
       <div className={classes.userMenu}>
         <div className={classes.userMenuWrapper}>
           <div className={classes.imageContainer}>
@@ -156,18 +299,24 @@ export default function Home() {
                 className={classes.editableNameInput}
                 type="text"
                 name="name"
+                disabled={putPersonalInfosIsPending}
                 onChange={(event) =>
-                  setProfile((prev) => ({ ...prev, name: event.target.value }))
+                  setProfile((prev) => ({
+                    ...prev,
+                    fullName: event.target.value,
+                  }))
                 }
                 onKeyDown={(event) => {
-                  if (event.key === "Enter")
+                  if (event.key === "Enter") {
                     setVisible((prev) => ({ ...prev, input: false }));
+                    handleProfileUpdate();
+                  }
                 }}
-                value={profile.name}
+                value={profile.fullName}
                 autoFocus
               />
             ) : (
-              <h2>{profile.name}</h2>
+              <h2>{profile.fullName}</h2>
             )}
 
             {visible.input ? (
@@ -175,12 +324,15 @@ export default function Home() {
                 className={classes.editableJobInput}
                 type="text"
                 name="job"
+                disabled={putPersonalInfosIsPending}
                 onChange={(event) =>
                   setProfile((prev) => ({ ...prev, job: event.target.value }))
                 }
                 onKeyDown={(event) => {
-                  if (event.key === "Enter")
+                  if (event.key === "Enter") {
                     setVisible((prev) => ({ ...prev, input: false }));
+                    handleProfileUpdate();
+                  }
                 }}
                 value={profile.job}
               />
@@ -294,7 +446,7 @@ export default function Home() {
                   </Button>
                   {visible.categoryMenu && (
                     <div className={classes.categoryContainer}>
-                      {texts.en.categories.map((catName) => (
+                      {texts.en.categories.map((catName, index) => (
                         <Button
                           key={catName}
                           cancelButton
@@ -310,7 +462,7 @@ export default function Home() {
                               : classes.filter
                           }
                         >
-                          <span>{catName}</span>
+                          <span>{texts[lang].categories[index]}</span>
                         </Button>
                       ))}
                     </div>
@@ -344,7 +496,7 @@ export default function Home() {
                               : classes.filter
                           }
                         >
-                          <span>{statusName}</span>
+                          <span> {texts[lang].status[index]}</span>
                         </Button>
                       ))}
                     </div>
@@ -444,22 +596,35 @@ export default function Home() {
           </div>
         </div>
         <div className={classes.projectCartContainer}>
-          <div className={classes.projectCart}>
-            {data?.result?.map((project) => (
-              <ProjectCart
-                key={project.id}
-                project={project}
-                onClick={() => openProjectPanel(project.id)}
-                src={`https://localhost:7178${project.imageUrl}`}
-                className={projectStyles[project.id]}
-              />
-            ))}
-          </div>
+          {data?.result && (
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className={classes.projectCart}
+            >
+              <AnimatePresence mode="popLayout">
+                {data.result.map((project) => (
+                  <ProjectCart
+                    key={project.id}
+                    project={project}
+                    onClick={() => openProjectPanel(project.id)}
+                    src={`https://localhost:7178${project.imageUrl}`}
+                    className={projectStyles[project.id]}
+                    onDeleteClick={() => handleDeleteClick(project.id)}
+                    isPending={deleteIsPending}
+                  />
+                ))}
+              </AnimatePresence>
+            </motion.div>
+          )}
         </div>
       </div>
-      {clickProject && (
-        <Project projectId={clickedProjectId} onClose={closeProjectPanel} />
-      )}
-    </div>
+      <AnimatePresence>
+        {clickProject && (
+          <Project projectId={clickedProjectId} onClose={closeProjectPanel} />
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }

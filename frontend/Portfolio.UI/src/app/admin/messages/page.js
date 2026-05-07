@@ -49,10 +49,19 @@ export default function Messages() {
   }
 
   if (isLoading) {
-    return <p>{texts[lang].loading}</p>;
+    return (
+      <div className="loadingContainer">
+        <p>{texts[lang].loading}</p>
+      </div>
+    );
   }
+
   if (isError) {
-    <p>{error?.message}</p>;
+    return (
+      <div className="loadingContainer">
+        <p>{error?.message || "An error occured"}</p>
+      </div>
+    );
   }
 
   return (

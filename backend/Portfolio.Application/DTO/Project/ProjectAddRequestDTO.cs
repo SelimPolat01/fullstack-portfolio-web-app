@@ -10,7 +10,7 @@ namespace Portfolio.Application.DTO.Project
         public string Name { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Short description is required.")]
-        [StringLength(300, MinimumLength = 5, ErrorMessage = "Short description must be between 5 and 300 characters.")]
+        [StringLength(400, MinimumLength = 5, ErrorMessage = "Short description must be between 5 and 300 characters.")]
         public string ShortDesc { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Long description is required.")]

@@ -4,6 +4,7 @@ using Portfolio.Application.DTO.Admin;
 using Portfolio.Application.DTO.Auth;
 using Portfolio.Application.DTO.Service;
 using Portfolio.Application.ServiceContracts;
+using Portfolio.Infrastructure.DbContext;
 using Portfolio.Infrastructure.Identity;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -18,7 +19,7 @@ namespace Portfolio.Application.Services
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public AuthService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, SignInManager<ApplicationUser> signInManager)
+        public AuthService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, SignInManager<ApplicationUser> signInManager, ApplicationDbContext db)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -108,10 +109,10 @@ namespace Portfolio.Application.Services
         public async Task<ServiceResult<AdminLoginResponseDTO>> LoginAdminAsync(AdminLoginRequestDTO adminLoginRequestDTO)
         {
             ApplicationUser? existingUser = await _userManager.FindByEmailAsync(adminLoginRequestDTO.Email);
-            if (existingUser == null) return ServiceResult<AdminLoginResponseDTO>.Fail("Invalid email or password");
+            if (existingUser == null) return ServiceResult<AdminLoginResponseDTO>.Fail("Email address not found");
             SignInResult result = await _signInManager.CheckPasswordSignInAsync(existingUser, adminLoginRequestDTO.Password, lockoutOnFailure: true);
             //SignInResult result = await _signInManager.PasswordSignInAsync(existingUser, adminLoginRequestDTO.Password, isPersistent: false, lockoutOnFailure: true);
-            if (!result.Succeeded) return ServiceResult<AdminLoginResponseDTO>.Fail("Invalid email or password");
+            if (!result.Succeeded) return ServiceResult<AdminLoginResponseDTO>.Fail("Invalid password");
             var roles = await _userManager.GetRolesAsync(existingUser);
             AuthenticationResponseDTO authenticationResponse = CreateJwtToken(existingUser, roles);
             existingUser.RefreshToken = authenticationResponse.RefreshToken;
@@ -134,6 +135,13 @@ namespace Portfolio.Application.Services
             existingUser.RefreshToken = null;
             existingUser.RefreshTokenExpirationTime = null;
             await _userManager.UpdateAsync(existingUser);
+        }
+
+        public async Task<ServiceResult<bool>> IsEmailAlreadyRegistered(string email)
+        {
+            ApplicationUser? user = await _userManager.FindByEmailAsync(email);
+            if (user == null) return ServiceResult<bool>.OkBool("Email not registered.");
+            return ServiceResult<bool>.FailBool("Email already registered.");
         }
     }
 }

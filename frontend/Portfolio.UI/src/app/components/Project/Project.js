@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useContext } from "react";
 import { LangContext } from "@/contexts/LangContext";
+import { motion } from "framer-motion";
 
 export default function Project({ projectId, onClose }) {
   const { lang, toggleLang } = useContext(LangContext);
@@ -40,7 +41,16 @@ export default function Project({ projectId, onClose }) {
   };
 
   if (isLoading)
-    return <div className={classes.loading}>Loading project...</div>;
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className={classes.loading}
+      >
+        Loading project...
+      </motion.div>
+    );
   if (isError)
     return (
       <div className={classes.error}>An error occurred: {error?.message}</div>
@@ -57,7 +67,18 @@ export default function Project({ projectId, onClose }) {
 
   return (
     <div className={classes.overlay}>
-      <div className={classes.projectModal}>
+      <motion.div
+        initial={{ opacity: 0, x: 100 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{
+          opacity: 0,
+          x: 100,
+          transition: { duration: 0.25, ease: "easeIn" },
+        }}
+        transition={{ type: "spring", damping: 25, stiffness: 200 }}
+        layout
+        className={classes.projectModal}
+      >
         <div className={classes.actionButtons}>
           {token && (
             <Link
@@ -157,7 +178,7 @@ export default function Project({ projectId, onClose }) {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

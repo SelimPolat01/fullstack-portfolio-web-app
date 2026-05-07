@@ -8,10 +8,8 @@ export default function Home() {
   const [isOpenDropdown, setIsOpenDropdown] = useState(false);
 
   return (
-    <>
-      <div className={classes.div} onClick={() => setIsOpenDropdown(false)}>
-        <AddContactForm />
-      </div>
-    </>
+    <div className={classes.div} onClick={() => setIsOpenDropdown(false)}>
+      <AddContactForm />
+    </div>
   );
 }

@@ -23,6 +23,7 @@ namespace Portfolio.Application.Services
                 Text = message.Text,
                 Email = message.Email,
                 PhoneNumber = message.PhoneNumber,
+                Subject = message.Subject,
                 Sender = message.Name + " " + message.Surname,
                 IsRead = message.IsRead,
                 CreatedAt = message.CreatedAt
@@ -40,6 +41,7 @@ namespace Portfolio.Application.Services
                 Text = message.Text,
                 Email = message.Email,
                 PhoneNumber = message.PhoneNumber,
+                Subject = message.Subject,
                 Sender = message.Name + " " + message.Surname,
                 IsRead = message.IsRead,
                 CreatedAt = message.CreatedAt

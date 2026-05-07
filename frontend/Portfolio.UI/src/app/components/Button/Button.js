@@ -1,5 +1,7 @@
-import { Children } from "react";
+"use client";
+
 import classes from "./Button.module.css";
+import { motion } from "framer-motion";
 
 export default function Button({
   type,
@@ -11,14 +13,14 @@ export default function Button({
   ...props
 }) {
   return (
-    <button
+    <motion.button
       type={type}
       className={`${cancelButton ? classes.cancelButton : classes.button} ${className ? className : ""}`}
       onClick={onClick}
-      disabled={disabled ? true : false}
+      disabled={disabled}
       {...props}
     >
       {children}
-    </button>
+    </motion.button>
   );
 }

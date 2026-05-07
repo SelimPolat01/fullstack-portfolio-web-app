@@ -3,9 +3,27 @@
 import Image from "next/image";
 import classes from "./About.module.css";
 import { LangContext } from "@/contexts/LangContext";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { textContainerVariants, textVariants } from "@/lib/variants";
+import { useGetPersonalInfos } from "@/hooks/GET/useGetPersonalInfos";
+import { useRouter } from "next/navigation";
 
 export default function About() {
+  const router = useRouter();
+  const [token, setToken] = useState(null);
+  useEffect(() => {
+    const currentToken = localStorage.getItem("token");
+    setToken(currentToken);
+  }, [router]);
+
+  const {
+    data: getPersonalInfosData,
+    isLoading: getPersonalInfosIsLoading,
+    isError: getPersonalInfosIsError,
+    error: getPersonalInfosError,
+  } = useGetPersonalInfos(token);
+
   const tectNames = [
     "python",
     "js",
@@ -33,24 +51,40 @@ export default function About() {
       p: "I am a Computer Engineering student and a software developer focused on full-stack web development with a strong emphasis on .NET and modern JavaScript frameworks. I build scalable backend systems using ASP.NET Core and design responsive frontend applications with React and Angular. I have experience developing RESTful APIs, authentication systems (JWT-based), and CRUD-based applications, and I actively apply clean architecture and modular design principles in my projects. In addition to web development, I have worked on machine learning projects using Python and PyTorch, particularly in image classification and regression tasks, which strengthened my problem-solving and analytical thinking skills. I am continuously improving my skills by building real-world projects and exploring backend architecture, system design, and AI integration in web applications.",
     },
   };
+
   return (
-    <div className={classes.div}>
-      <h1 className={classes.aboutMe}>{texts[lang].h1}</h1>
-      <div className={classes.aboutText}>
-        <p>{texts[lang].p}</p>
-      </div>
+    <motion.div
+      variants={textContainerVariants}
+      initial="hidden"
+      animate="visible"
+      className={classes.div}
+    >
+      <motion.h1 variants={textVariants} className={classes.aboutMe}>
+        {texts[lang].h1}
+      </motion.h1>
+      <motion.div className={classes.aboutText}>
+        <motion.p variants={textVariants}>
+          {getPersonalInfosData?.result?.about}
+        </motion.p>
+      </motion.div>
       <div className={classes.logoDiv}>
         {tectNames.map((logoPath) => (
-          <div key={logoPath}>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            key={logoPath}
+          >
             <Image
+              priority
               src={`/${logoPath}.svg`}
               alt={logoPath}
               width={30}
               height={30}
             />
-          </div>
+          </motion.div>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 }

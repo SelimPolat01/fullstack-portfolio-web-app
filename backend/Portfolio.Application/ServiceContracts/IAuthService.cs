@@ -16,5 +16,7 @@ namespace Portfolio.Application.ServiceContracts
         public string GenerateRefreshToken();
 
         public Task LogoutAdminAsync(string? userId);
+
+        public Task<ServiceResult<bool>> IsEmailAlreadyRegistered(string email);
     }
 }

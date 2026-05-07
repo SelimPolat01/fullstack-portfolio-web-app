@@ -1,11 +1,7 @@
 .projectCartContainer {
   width: 425px;
   cursor: pointer;
-  transition: all 0.25s ease-in-out;
-}
-
-.projectCartContainer:hover {
-  transform: translateX(+10px);
+  word-break: break-word;
 }
 
 .projectCart {
@@ -104,6 +100,6 @@
 }
 
 .deleteButton:hover {
-  background: #ee0959;
+  background: #dc2626;
   transform: rotate(90deg);
 }

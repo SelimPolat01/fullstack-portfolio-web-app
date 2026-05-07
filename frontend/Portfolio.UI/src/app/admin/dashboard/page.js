@@ -17,6 +17,7 @@ import HalfCircleProgress from "../../components/HalfCircleProgress/HalfCirclePr
 import { LangContext } from "@/contexts/LangContext";
 import { useRouter } from "next/navigation";
 import { useGetProjects } from "@/hooks/GET/useGetProjects";
+import { motion } from "framer-motion";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -29,7 +30,7 @@ export default function Dashboard() {
       return;
     }
   }, [router]);
-  const { lang, toggleLang } = useContext(LangContext);
+  const { lang } = useContext(LangContext);
   const { data, isLoading, isError, error } = useGetMessages(token);
   const {
     data: projectData,
@@ -46,6 +47,7 @@ export default function Dashboard() {
         "Her ay için belirlediğin hedefler",
         "Bugün 4156 $ kazandın. Geçen aya göre daha yüksek. İyi iş!",
       ],
+      loading: "Yükleniyor...",
     },
     en: {
       frameTexts: ["Messages", "Projects", "Works"],
@@ -55,15 +57,46 @@ export default function Dashboard() {
         "Target you've set for each month",
         "You earn $4156 today. It's higher than last month. Good work!",
       ],
+      loading: "Loading...",
     },
   };
-  const COLORS = ["#3b82f6", "#e5e7eb"];
-  console.log(data);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.12,
+        delayChildren: 0.1,
+      },
+    },
+  };
+
+  if (isLoading || projectIsLoading) {
+    return (
+      <div className="loadingContainer">
+        <p>{texts[lang].loading}</p>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="loadingContainer">
+        <p>{error?.message || "An error occured"}</p>
+      </div>
+    );
+  }
 
   return (
     <div className={classes.div}>
       <div className={classes.divContainer}>
-        <div className={classes.frameDiv}>
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className={classes.frameDiv}
+        >
           <Frame
             className={classes.frame}
             icon={<MessageSquare />}
@@ -86,7 +119,7 @@ export default function Dashboard() {
             className={classes.frame}
             icon={<Briefcase />}
             text={texts[lang].frameTexts[2]}
-            total="2"
+            total="1"
             change="7.13%"
             changeIcon={<ArrowDown />}
             downChange
@@ -100,14 +133,17 @@ export default function Dashboard() {
           <HalfCircleProgress
             text={texts[lang].monthlyCashTargetTexts[0]}
             subText={texts[lang].monthlyCashTargetTexts[1]}
-            percent="77"
+            percent={75}
             change="21"
             description={texts[lang].monthlyCashTargetTexts[2]}
             upChange={<ArrowUp />}
             downChange={<ArrowDown />}
             optionsIcon={<MoreVertical />}
+            targetValue="13$K"
+            revenueValue="21$K"
+            todayValue="7$K"
           />
-        </div>
+        </motion.div>
       </div>
     </div>
   );

@@ -6,6 +6,7 @@
   background-color: #150a29;
   resize: none;
   padding: 12px 16px;
+  box-sizing: border-box;
 }
 
 .textarea:focus {

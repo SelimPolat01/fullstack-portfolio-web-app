@@ -1,0 +1,153 @@
+.div {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.pageTitle {
+  font-size: 32px;
+  margin-bottom: 24px;
+  align-self: flex-start;
+  font-size: 32px;
+  width: max-content;
+  background: linear-gradient(
+    105.66deg,
+    #00f4ff 16.76%,
+    #68ffed 46.39%,
+    #9867ff 76.01%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+
+.settingsContainer {
+  display: flex;
+  flex-direction: column;
+  background: #150a29;
+  border: 1px solid #4b336b;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  padding: 1rem 3rem 3rem 3rem;
+}
+
+.settingBlock {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 4rem;
+  padding: 3rem 0;
+  border-bottom: 1px solid rgba(75, 51, 107, 0.5);
+}
+
+.settingBlock:last-of-type {
+  border-bottom: none;
+}
+
+.blockInfo h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 18px;
+  color: #f8f8f8;
+  margin: 0 0 0.8rem 0;
+}
+
+.blockInfo p {
+  font-size: 14px;
+  color: #a9a3b0;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.icon {
+  color: #9867ff;
+}
+
+.blockForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.toggleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(75, 51, 107, 0.2);
+  padding: 1.2rem 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #4b336b;
+}
+
+.toggleRow h4 {
+  margin: 0 0 0.4rem 0;
+  color: #f8f8f8;
+  font-size: 15px;
+}
+
+.toggleRow p {
+  margin: 0;
+  color: #a9a3b0;
+  font-size: 13px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #3b2a56;
+  transition: 0.4s;
+  border-radius: 24px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+.switch input:checked + .slider {
+  background-color: #9867ff;
+}
+
+.switch input:focus + .slider {
+  box-shadow: 0 0 1px #9867ff;
+}
+
+.switch input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+.submitContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}

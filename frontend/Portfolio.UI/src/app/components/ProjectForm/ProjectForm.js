@@ -10,15 +10,45 @@ import Button from "../Button/Button";
 import { ArrowDown } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  dropdownVariants,
+  formElementVariants,
+  formVariants,
+  textVariants,
+} from "@/lib/variants";
+import SuccessMessage from "../SuccessMessage/SuccessMessage";
 
 export default function ProjectForm({
   onSubmitForm,
-  isLoading,
+  isPending,
   initialData,
   addProject,
   editProject,
+  isSuccess,
+  setIsSuccess,
 }) {
   const router = useRouter();
+  const imageInputRef = useRef(null);
+  const [isShaking, setIsShaking] = useState(false);
+  const [token, setToken] = useState(null);
+  const [date, setDate] = useState(null);
+  const [isOpenDropdown, setIsOpenDropdown] = useState({
+    category: false,
+    status: false,
+  });
+  const [touched, setTouched] = useState({
+    category: false,
+    status: false,
+    img: false,
+    date: false,
+  });
+  const [imageFile, setImageFile] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const [selected, setSelected] = useState({
+    category: "",
+    status: "",
+  });
   const [input, setInput] = useState({
     name: {
       letters: "",
@@ -64,14 +94,7 @@ export default function ProjectForm({
       return;
     }
   }, [router]);
-  useEffect(() => {
-    const currentToken = localStorage.getItem("token");
-    setToken(currentToken);
-    if (!currentToken) {
-      router.replace("/login");
-      return;
-    }
-  }, [router]);
+
   useEffect(() => {
     if (initialData) {
       setInput((prev) => ({
@@ -103,27 +126,6 @@ export default function ProjectForm({
     }
   }, [initialData]);
 
-  const imageInputRef = useRef(null);
-  const [isShaking, setIsShaking] = useState(false);
-  const [token, setToken] = useState(null);
-  const [date, setDate] = useState(null);
-  const [isOpenDropdown, setIsOpenDropdown] = useState({
-    category: false,
-    status: false,
-  });
-  const [touched, setTouched] = useState({
-    category: false,
-    status: false,
-    img: false,
-    date: false,
-  });
-  const [imageFile, setImageFile] = useState(null);
-  const [preview, setPreview] = useState(null);
-  const [selected, setSelected] = useState({
-    category: "",
-    status: "",
-  });
-
   let texts = {};
   if (addProject) {
     texts = {
@@ -149,11 +151,15 @@ export default function ProjectForm({
           "Ön Uç",
           "Derin Öğrenme",
           "Makine Öğrenmesi",
-          "Mobil",
+          "Mobil Uygulama",
           "Siber Güvenlik",
         ],
         situations: ["Bitmedi", "Bitti"],
         buttonTexts: ["Ekleniyor...", "Ekle"],
+        successMessageTitle: "Eklendi!",
+        successMessageText:
+          "Proje bilgileri başarıyla güncellendi. Portfolyon taptaze duruyor!",
+        successMessageButtonText: "Projelerim'e Git",
       },
       en: {
         h1: "Add Project",
@@ -177,11 +183,15 @@ export default function ProjectForm({
           "Frontend",
           "Deep Learning",
           "Machine Learning",
-          "Mobile",
+          "Mobile Application",
           "Cyber Security",
         ],
         situations: ["Not Finished", "Finished"],
         buttonTexts: ["Adding...", "Add"],
+        successMessageTitle: "Added",
+        successMessageText:
+          "Your new project has been successfully included in your portfolio. Ready to share with the world!",
+        successMessageButtonText: "Go To My Projects",
       },
     };
   } else if (editProject) {
@@ -213,9 +223,13 @@ export default function ProjectForm({
         ],
         situations: ["Bitmedi", "Bitti"],
         buttonTexts: ["Ekleniyor...", "Ekle"],
+        successMessageTitle: "Düzenlendi!",
+        successMessageText:
+          "Proje bilgileri başarıyla güncellendi. Portfolyon taptaze duruyor!r",
+        successMessageButtonText: "Projelerim'e Git",
       },
       en: {
-        h1: "Add Project",
+        h1: "Edit Project",
         labels: [
           "Name",
           "Short Description",
@@ -241,6 +255,10 @@ export default function ProjectForm({
         ],
         situations: ["Not Finished", "Finished"],
         buttonTexts: ["Editting...", "Edit"],
+        successMessageTitle: "Updated!",
+        successMessageText:
+          "Project information has been successfully updated. Your portfolio looks fresh!",
+        successMessageButtonText: "Go To My Projects",
       },
     };
   }
@@ -270,15 +288,26 @@ export default function ProjectForm({
 
   function validate(input, selected, date, imageFile, preview) {
     const errors = {};
-    if (!input.name.letters.trim()) errors.name = "Name is required";
-    if (!input.shortDesc.letters.trim() || input.shortDesc.letters.length < 5)
-      errors.shortDesc = "Short description is invalid format.";
-    if (!input.longDesc.letters.trim() || input.longDesc.letters.length < 5)
-      errors.longDesc = "Long description is invalid format.";
+    if (
+      !input.name.letters.trim() ||
+      input.name.letters.length < 3 ||
+      input.name.letters.length > 100
+    )
+      errors.name = "Name is required";
+    if (
+      !input.shortDesc.letters.trim() ||
+      input.shortDesc.letters.length < 5 ||
+      input.shortDesc.letters.length > 400
+    )
+      errors.shortDesc =
+        "Short description must be between 5 and 400 characters.";
+    if (!input.longDesc.letters.trim() || input.longDesc.letters.length < 10)
+      errors.longDesc =
+        "Long description is required and must be at least 10 characters.";
     if (input.techs.tags.length == 0) errors.techs = "Techs is required";
     if (input.features.tags.length == 0)
       errors.features = "Features is required";
-    if (!input.creator.letters.trim()) errors.creator = "creator is required.";
+    if (!input.creator.letters.trim()) errors.creator = "Creator is required.";
     if (!input.githubLink.letters.trim())
       errors.githubLink = "GitHub link is required.";
     if (!imageFile && !preview) errors.imageFile = "Image is required.";
@@ -446,10 +475,6 @@ export default function ProjectForm({
     setDate(null);
   }
 
-  if (isLoading) {
-    return <div style={{ color: "white" }}>Loading...</div>;
-  }
-
   return (
     <div
       className={classes.div}
@@ -460,292 +485,424 @@ export default function ProjectForm({
         })
       }
     >
-      <h1 className={classes.addProjects}>{texts[lang].h1}</h1>
-      <form className={classes.form} onSubmit={submitHandler}>
-        <div className={classes.subDivContainer}>
-          <div className={classes.labelInput}>
-            <label htmlFor="name">{texts[lang].labels[0]}</label>
-            <Input
-              type="text"
-              name="name"
-              className={`${classes.input} ${input.name.isBlur && currentErrors.name ? classes.error : ""} ${isShaking && currentErrors.name ? classes.shake : ""}`}
-              onFocus={focusHandler}
-              onChange={changeHandler}
-              onBlur={blurHandler}
-              value={input.name.letters}
-            />
-          </div>
-          <div className={classes.labelInput}>
-            <label htmlFor="shortDesc">{texts[lang].labels[1]}</label>
-            <TextArea
-              type="text"
-              name="shortDesc"
-              rows={5}
-              className={`${classes.shortTextArea} ${input.shortDesc.isBlur && currentErrors.shortDesc ? classes.error : ""} ${isShaking && currentErrors.shortDesc ? classes.shake : ""}`}
-              onFocus={focusHandler}
-              onChange={changeHandler}
-              onBlur={blurHandler}
-              value={input.shortDesc.letters}
-            />
-          </div>
-          <div className={classes.labelInput}>
-            <label htmlFor="name">{texts[lang].labels[2]}</label>
-            <Input
-              type="text"
-              name="githubLink"
-              className={`${classes.input} ${input.githubLink.isBlur && currentErrors.githubLink ? classes.error : ""} ${isShaking && currentErrors.githubLink ? classes.shake : ""}`}
-              onFocus={focusHandler}
-              onChange={changeHandler}
-              onBlur={blurHandler}
-              value={input.githubLink.letters}
-              placeholder="https://github.com/user/project"
-            />
-          </div>
-          <div className={classes.selectDiv}>
-            <div className={classes.labelInput}>
-              <label htmlFor="category">{texts[lang].labels[3]}</label>
-              <div
-                onClick={(event) => {
-                  setIsOpenDropdown((prev) => ({ ...prev, category: true }));
-                  setTouched((prev) => ({ ...prev, category: true }));
-                  event.stopPropagation();
-                }}
-                className={`${classes.selectContainer} ${touched.category && currentErrors.category ? classes.error : ""} ${isShaking && currentErrors.category ? classes.shake : ""}`}
+      {!isSuccess && (
+        <motion.h1 variants={textVariants} className={classes.addProjects}>
+          {texts[lang].h1}
+        </motion.h1>
+      )}
+
+      <AnimatePresence mode="wait">
+        {!isSuccess ? (
+          <motion.form
+            key="project-form"
+            variants={formVariants}
+            initial="hidden"
+            whileInView="visible"
+            exit="exit"
+            className={classes.form}
+            onSubmit={submitHandler}
+          >
+            <div className={classes.subDivContainer}>
+              <motion.div
+                variants={formElementVariants}
+                className={classes.labelInput}
               >
-                <div className={classes.selectArrowContainer}>
-                  <h2 className={classes.pleaseSelect}>
-                    {selected.category === ""
-                      ? `${texts[lang].selectText}`
-                      : `${texts[lang].categories[index.category]}`}
-                  </h2>
-                  <Button
-                    type="button"
-                    className={classes.arrowButton}
-                    cancelButton
-                  >
-                    <ArrowDown
-                      className={classes.arrow}
-                      size={25}
-                      stroke="url(#magic-gradient)"
-                    />
-                  </Button>
-                </div>
-                {isOpenDropdown.category && (
-                  <div className={classes.optionsContainer}>
-                    <ul>
-                      {texts.en.categories.map((category, index) => (
-                        <li
-                          key={index}
-                          onClick={(event) => {
-                            setSelected((prev) => ({
-                              ...prev,
-                              category: category,
-                            }));
-                            event.stopPropagation();
-                            setIsOpenDropdown((prev) => ({
-                              ...prev,
-                              category: false,
-                            }));
-                          }}
-                        >
-                          {texts[lang].categories[index]}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className={classes.labelInput}>
-              <label htmlFor="category">{texts[lang].labels[4]}</label>
-              <div
-                onClick={(event) => {
-                  setIsOpenDropdown((prev) => ({ ...prev, status: true }));
-                  setTouched((prev) => ({ ...prev, status: true }));
-                  event.stopPropagation();
-                }}
-                className={`${classes.selectContainer} ${touched.status && currentErrors.status ? classes.error : ""} ${isShaking && currentErrors.status ? classes.shake : ""}`}
-              >
-                <div className={classes.selectArrowContainer}>
-                  <h2 className={classes.pleaseSelect}>
-                    {selected.status === ""
-                      ? `${texts[lang].selectText}`
-                      : `${texts[lang].situations[index.status]}`}
-                  </h2>
-                  <Button
-                    type="button"
-                    className={classes.arrowButton}
-                    cancelButton
-                  >
-                    <ArrowDown
-                      className={classes.arrow}
-                      size={25}
-                      stroke="url(#magic-gradient)"
-                    />
-                  </Button>
-                </div>
-                {isOpenDropdown.status && (
-                  <div className={classes.optionsContainer}>
-                    <ul>
-                      {texts.en.situations.map((situation, index) => (
-                        <li
-                          key={index}
-                          onClick={(event) => {
-                            setSelected((prev) => ({
-                              ...prev,
-                              status: situation,
-                            }));
-                            event.stopPropagation();
-                            setIsOpenDropdown((prev) => ({
-                              ...prev,
-                              status: false,
-                            }));
-                          }}
-                        >
-                          {texts[lang].situations[index]}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-          <div className={classes.dateImageContainer}>
-            <div className={classes.labelInput}>
-              <label htmlFor="image">{texts[lang].labels[5]}</label>
-              <div
-                className={`${classes.imageFile} ${touched.img && currentErrors.imageFile ? classes.error : ""} ${isShaking && currentErrors.imageFile ? classes.shake : ""}`}
-                onClick={() => {
-                  imageInputRef.current?.click();
-                  setTouched((prev) => ({ ...prev, img: true }));
-                }}
-              >
-                {preview && (
-                  <img
-                    className={classes.preview}
-                    src={preview}
-                    alt="project image"
-                  />
-                )}
-              </div>
-              <input
-                type="file"
-                name="image"
-                id="image"
-                className={classes.hiddenInput}
-                onChange={handleFileChange}
-                ref={imageInputRef}
-              />
-            </div>
-            <div className={classes.labelInput}>
-              <label htmlFor="date">{texts[lang].labels[6]}</label>
-              <div
-                className={`${classes.dateContainer} ${touched.date && currentErrors.date ? classes.error : ""} ${isShaking && currentErrors.date ? classes.shake : ""}`}
-                onClick={() => setTouched((prev) => ({ ...prev, date: true }))}
-              >
-                <DatePicker
-                  selected={date}
-                  onChange={(d) => setDate(d)}
-                  className={classes.date}
-                  dateFormat="yyyy-MM-dd"
-                  inline
+                <label htmlFor="name">{texts[lang].labels[0]}</label>
+                <Input
+                  type="text"
+                  name="name"
+                  className={`${classes.input} ${input.name.isBlur && currentErrors.name ? classes.error : ""} ${isShaking && currentErrors.name ? classes.shake : ""}`}
+                  onFocus={focusHandler}
+                  onChange={changeHandler}
+                  onBlur={blurHandler}
+                  value={input.name.letters}
                 />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className={classes.subDivContainer}>
-          <div className={classes.labelInput}>
-            <label htmlFor="longDesc">{texts[lang].labels[7]}</label>
-            <TextArea
-              type="text"
-              rows={13}
-              name="longDesc"
-              className={`${classes.longTextArea} ${input.longDesc.isBlur && currentErrors.longDesc ? classes.error : ""} ${isShaking && currentErrors.longDesc ? classes.shake : ""}`}
-              onFocus={focusHandler}
-              onChange={changeHandler}
-              onBlur={blurHandler}
-              value={input.longDesc.letters}
-            />
-          </div>
-          <div className={classes.tagWrapper}>
-            <div
-              className={`${classes.tagContainer} ${input.techs.isBlur && currentErrors.techs ? classes.error : ""} ${isShaking && currentErrors.techs ? classes.shake : ""}`}
-            >
-              <div className={classes.tags}>
-                {input.techs.tags.map((tag, index) => (
-                  <div key={index} className={classes.tagDiv}>
-                    <Button
-                      type="button"
-                      cancelButton
-                      onClick={() => removeTechTag(index)}
-                      className={classes.tagButton}
+                {input.name.isBlur && currentErrors.name && (
+                  <span className="errorSpan">{currentErrors.name}</span>
+                )}
+              </motion.div>
+              <motion.div
+                variants={formElementVariants}
+                className={classes.labelInput}
+              >
+                <label htmlFor="shortDesc">{texts[lang].labels[1]}</label>
+                <TextArea
+                  type="text"
+                  name="shortDesc"
+                  rows={5}
+                  className={`${classes.shortTextArea} ${input.shortDesc.isBlur && currentErrors.shortDesc ? classes.error : ""} ${isShaking && currentErrors.shortDesc ? classes.shake : ""}`}
+                  onFocus={focusHandler}
+                  onChange={changeHandler}
+                  onBlur={blurHandler}
+                  value={input.shortDesc.letters}
+                />
+                {input.shortDesc.isBlur && currentErrors.shortDesc && (
+                  <span className="errorSpan">{currentErrors.shortDesc}</span>
+                )}
+              </motion.div>
+              <motion.div
+                variants={formElementVariants}
+                className={classes.labelInput}
+              >
+                <label htmlFor="githubLink">{texts[lang].labels[2]}</label>
+                <Input
+                  type="text"
+                  name="githubLink"
+                  className={`${classes.input} ${input.githubLink.isBlur && currentErrors.githubLink ? classes.error : ""} ${isShaking && currentErrors.githubLink ? classes.shake : ""}`}
+                  onFocus={focusHandler}
+                  onChange={changeHandler}
+                  onBlur={blurHandler}
+                  value={input.githubLink.letters}
+                  placeholder="https://github.com/user/project"
+                />
+                {input.githubLink.isBlur && currentErrors.githubLink && (
+                  <span className="errorSpan">{currentErrors.githubLink}</span>
+                )}
+              </motion.div>
+              <div className={classes.selectDiv}>
+                <div className={classes.labelInputContainer}>
+                  <motion.div
+                    variants={formElementVariants}
+                    className={classes.labelInput}
+                  >
+                    <label htmlFor="category">{texts[lang].labels[3]}</label>
+                    <div
+                      onClick={(event) => {
+                        setIsOpenDropdown((prev) => ({
+                          ...prev,
+                          category: true,
+                        }));
+                        setTouched((prev) => ({ ...prev, category: true }));
+                        event.stopPropagation();
+                      }}
+                      className={`${classes.selectContainer} ${touched.category && currentErrors.category ? classes.error : ""} ${isShaking && currentErrors.category ? classes.shake : ""}`}
                     >
-                      <span>{tag}</span>
-                    </Button>
-                  </div>
-                ))}
-              </div>
-              <Input
-                type="text"
-                name="techs"
-                className={`${classes.tagInput} ${input.techs.isBlur && currentErrors.techs ? classes.error : ""} ${isShaking && currentErrors.techs ? classes.shake : ""}`}
-                value={input.techs.letters}
-                onChange={changeHandler}
-                onKeyDown={handleKeyDown}
-                placeholder={texts[lang].techText}
-              />
-            </div>
-            <div
-              className={`${classes.featureContainer} ${input.features.isBlur && currentErrors.features ? classes.error : ""} ${isShaking && currentErrors.features ? classes.shake : ""}`}
-            >
-              <div className={classes.tags}>
-                {input.features.tags.map((tag, index) => (
-                  <div key={index} className={classes.tagDiv}>
-                    <Button
-                      type="button"
-                      cancelButton
-                      onClick={() => removeFeatureTag(index)}
-                      className={classes.tagButton}
+                      <div className={classes.selectArrowContainer}>
+                        <h2 className={classes.pleaseSelect}>
+                          {selected.category === ""
+                            ? `${texts[lang].selectText}`
+                            : `${texts[lang].categories[index.category]}`}
+                        </h2>
+                        <Button
+                          type="button"
+                          className={classes.arrowButton}
+                          cancelButton
+                        >
+                          <ArrowDown
+                            className={classes.arrow}
+                            size={25}
+                            stroke="url(#magic-gradient)"
+                          />
+                        </Button>
+                      </div>
+                      <AnimatePresence>
+                        {isOpenDropdown.category && (
+                          <motion.div
+                            variants={dropdownVariants}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            className={classes.optionsContainer}
+                            style={{ originY: 0 }}
+                          >
+                            <ul>
+                              {texts.en.categories.map((category, index) => (
+                                <li
+                                  key={index}
+                                  onClick={(event) => {
+                                    setSelected((prev) => ({
+                                      ...prev,
+                                      category: category,
+                                    }));
+                                    event.stopPropagation();
+                                    setIsOpenDropdown((prev) => ({
+                                      ...prev,
+                                      category: false,
+                                    }));
+                                  }}
+                                >
+                                  {texts[lang].categories[index]}
+                                </li>
+                              ))}
+                            </ul>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  </motion.div>
+                  {touched.category && currentErrors.category && (
+                    <span className="errorSpan">{currentErrors.category}</span>
+                  )}
+                </div>
+                <div className={classes.labelInputContainer}>
+                  <motion.div
+                    variants={formElementVariants}
+                    className={classes.labelInput}
+                  >
+                    <label htmlFor="status">{texts[lang].labels[4]}</label>
+                    <div
+                      onClick={(event) => {
+                        setIsOpenDropdown((prev) => ({
+                          ...prev,
+                          status: true,
+                        }));
+                        setTouched((prev) => ({ ...prev, status: true }));
+                        event.stopPropagation();
+                      }}
+                      className={`${classes.selectContainer} ${touched.status && currentErrors.status ? classes.error : ""} ${isShaking && currentErrors.status ? classes.shake : ""}`}
                     >
-                      <span>{tag}</span>
-                    </Button>
-                  </div>
-                ))}
+                      <div className={classes.selectArrowContainer}>
+                        <h2 className={classes.pleaseSelect}>
+                          {selected.status === ""
+                            ? `${texts[lang].selectText}`
+                            : `${texts[lang].situations[index.status]}`}
+                        </h2>
+                        <Button
+                          type="button"
+                          className={classes.arrowButton}
+                          cancelButton
+                        >
+                          <ArrowDown
+                            className={classes.arrow}
+                            size={25}
+                            stroke="url(#magic-gradient)"
+                          />
+                        </Button>
+                      </div>
+                      <AnimatePresence>
+                        {isOpenDropdown.status && (
+                          <motion.div
+                            variants={dropdownVariants}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            className={classes.optionsContainer}
+                            style={{ originY: 0 }}
+                          >
+                            <ul>
+                              {texts.en.situations.map((situation, index) => (
+                                <li
+                                  key={index}
+                                  onClick={(event) => {
+                                    setSelected((prev) => ({
+                                      ...prev,
+                                      status: situation,
+                                    }));
+                                    event.stopPropagation();
+                                    setIsOpenDropdown((prev) => ({
+                                      ...prev,
+                                      status: false,
+                                    }));
+                                  }}
+                                >
+                                  {texts[lang].situations[index]}
+                                </li>
+                              ))}
+                            </ul>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  </motion.div>
+                  {touched.status && currentErrors.status && (
+                    <span className="errorSpan">{currentErrors.status}</span>
+                  )}
+                </div>
               </div>
-              <Input
-                type="text"
-                name="features"
-                className={`${classes.tagInput} ${input.features.isBlur && currentErrors.features ? classes.error : ""} ${isShaking && currentErrors.features ? classes.shake : ""}`}
-                value={input.features.letters}
-                onChange={changeHandler}
-                onKeyDown={handleKeyDown}
-                placeholder={texts[lang].featureText}
-              />
+              <div className={classes.dateImageContainer}>
+                <motion.div
+                  variants={formElementVariants}
+                  className={classes.labelInput}
+                >
+                  <label htmlFor="image">{texts[lang].labels[5]}</label>
+                  <div
+                    className={`${classes.imageFile} ${touched.img && currentErrors.imageFile ? classes.error : ""} ${isShaking && currentErrors.imageFile ? classes.shake : ""}`}
+                    onClick={() => {
+                      imageInputRef.current?.click();
+                      setTouched((prev) => ({ ...prev, img: true }));
+                    }}
+                  >
+                    {preview && (
+                      <img
+                        className={classes.preview}
+                        src={preview}
+                        alt="project image"
+                      />
+                    )}
+                  </div>
+                  <input
+                    type="file"
+                    name="image"
+                    id="image"
+                    className={classes.hiddenInput}
+                    onChange={handleFileChange}
+                    ref={imageInputRef}
+                  />
+                  {touched.img &&
+                    input.image.isBlur &&
+                    currentErrors.imageFile && (
+                      <span className="errorSpan">
+                        {currentErrors.imageFile}
+                      </span>
+                    )}
+                </motion.div>
+                <motion.div
+                  variants={formElementVariants}
+                  className={classes.labelInput}
+                >
+                  <label htmlFor="date">{texts[lang].labels[6]}</label>
+                  <div
+                    className={`${classes.dateContainer} ${touched.date && currentErrors.date ? classes.error : ""} ${isShaking && currentErrors.date ? classes.shake : ""}`}
+                    onClick={() =>
+                      setTouched((prev) => ({ ...prev, date: true }))
+                    }
+                  >
+                    <DatePicker
+                      selected={date}
+                      onChange={(d) => setDate(d)}
+                      className={classes.date}
+                      dateFormat="yyyy-MM-dd"
+                      inline
+                    />
+                  </div>
+                  {touched.date && currentErrors.date && (
+                    <span className="errorSpan">{currentErrors.date}</span>
+                  )}
+                </motion.div>
+              </div>
             </div>
-          </div>
-          <div className={classes.labelInput}>
-            <label htmlFor="creator">{texts[lang].labels[8]}</label>
-            <Input
-              type="text"
-              name="creator"
-              className={`${classes.input} ${input.creator.isBlur && currentErrors.creator ? classes.error : ""} ${isShaking && currentErrors.creator ? classes.shake : ""}`}
-              onFocus={focusHandler}
-              onChange={changeHandler}
-              onBlur={blurHandler}
-              value={input.creator.letters}
-            />
-          </div>
-          <Button type="submit" className={classes.button}>
-            <span>
-              {isLoading
-                ? `${texts[lang].buttonTexts[0]}`
-                : `${texts[lang].buttonTexts[1]}`}
-            </span>
-          </Button>
-        </div>
-      </form>
+            <div className={classes.subDivContainer}>
+              <motion.div
+                variants={formElementVariants}
+                className={classes.labelInput}
+              >
+                <label htmlFor="longDesc">{texts[lang].labels[7]}</label>
+                <TextArea
+                  type="text"
+                  rows={13}
+                  name="longDesc"
+                  className={`${classes.longTextArea} ${input.longDesc.isBlur && currentErrors.longDesc ? classes.error : ""} ${isShaking && currentErrors.longDesc ? classes.shake : ""}`}
+                  onFocus={focusHandler}
+                  onChange={changeHandler}
+                  onBlur={blurHandler}
+                  value={input.longDesc.letters}
+                />
+                {input.longDesc.isBlur && currentErrors.longDesc && (
+                  <span className="errorSpan">{currentErrors.longDesc}</span>
+                )}
+              </motion.div>
+              <motion.div
+                variants={formElementVariants}
+                className={classes.tagWrapper}
+              >
+                <div
+                  className={`${classes.tagContainer} ${input.techs.isBlur && currentErrors.techs ? classes.error : ""} ${isShaking && currentErrors.techs ? classes.shake : ""}`}
+                >
+                  <div className={classes.tags}>
+                    {input.techs.tags.map((tag, index) => (
+                      <div key={index} className={classes.tagDiv}>
+                        <Button
+                          type="button"
+                          cancelButton
+                          onClick={() => removeTechTag(index)}
+                          className={classes.tagButton}
+                        >
+                          <span>{tag}</span>
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                  <Input
+                    type="text"
+                    name="techs"
+                    className={`${classes.tagInput} ${input.techs.isBlur && currentErrors.techs ? classes.error : ""} ${isShaking && currentErrors.techs ? classes.shake : ""}`}
+                    value={input.techs.letters}
+                    onChange={changeHandler}
+                    onKeyDown={handleKeyDown}
+                    placeholder={texts[lang].techText}
+                  />
+                  {input.techs.isBlur && currentErrors.techs && (
+                    <span className="errorSpan">{currentErrors.techs}</span>
+                  )}
+                </div>
+                <div
+                  className={`${classes.featureContainer} ${input.features.isBlur && currentErrors.features ? classes.error : ""} ${isShaking && currentErrors.features ? classes.shake : ""}`}
+                >
+                  <div className={classes.tags}>
+                    {input.features.tags.map((tag, index) => (
+                      <div key={index} className={classes.tagDiv}>
+                        <Button
+                          type="button"
+                          cancelButton
+                          onClick={() => removeFeatureTag(index)}
+                          className={classes.tagButton}
+                        >
+                          <span>{tag}</span>
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                  <Input
+                    type="text"
+                    name="features"
+                    className={`${classes.tagInput} ${input.features.isBlur && currentErrors.features ? classes.error : ""} ${isShaking && currentErrors.features ? classes.shake : ""}`}
+                    value={input.features.letters}
+                    onChange={changeHandler}
+                    onKeyDown={handleKeyDown}
+                    placeholder={texts[lang].featureText}
+                  />
+                  {input.features.isBlur && currentErrors.features && (
+                    <span className="errorSpan">{currentErrors.features}</span>
+                  )}
+                </div>
+              </motion.div>
+              <motion.div
+                variants={formElementVariants}
+                className={classes.labelInput}
+              >
+                <label htmlFor="creator">{texts[lang].labels[8]}</label>
+                <Input
+                  type="text"
+                  name="creator"
+                  className={`${classes.input} ${input.creator.isBlur && currentErrors.creator ? classes.error : ""} ${isShaking && currentErrors.creator ? classes.shake : ""}`}
+                  onFocus={focusHandler}
+                  onChange={changeHandler}
+                  onBlur={blurHandler}
+                  value={input.creator.letters}
+                />
+                {input.creator.isBlur && currentErrors.creator && (
+                  <span className="errorSpan">{currentErrors.creator}</span>
+                )}
+              </motion.div>
+              <motion.div variants={formElementVariants}>
+                <Button
+                  type="submit"
+                  className={classes.button}
+                  disabled={isPending}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <span>
+                    {isPending
+                      ? `${texts[lang].buttonTexts[0]}`
+                      : `${texts[lang].buttonTexts[1]}`}
+                  </span>
+                </Button>
+              </motion.div>
+            </div>
+          </motion.form>
+        ) : (
+          <SuccessMessage
+            key="success-form"
+            onClick={() => {
+              setIsSuccess(false);
+              router.push("/admin/projects");
+            }}
+            title={texts[lang].successMessageTitle}
+            text={texts[lang].successMessageText}
+            buttonText={texts[lang].successMessageButtonText}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

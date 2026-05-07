@@ -2,8 +2,8 @@
   border-radius: 12px;
   outline: none;
   font-size: 20px;
-  width: 90px;
-  height: 40px;
+  width: max-content;
+  height: max-content;
   background: linear-gradient(
     105.66deg,
     #00f4ff 16.76%,
@@ -15,6 +15,8 @@
   transition: transform 0.25s ease-in;
   backface-visibility: hidden;
   -webkit-font-smoothing: subpixel-antialiased;
+  cursor: pointer;
+  padding: 8px 10px;
 }
 
 .button:hover {

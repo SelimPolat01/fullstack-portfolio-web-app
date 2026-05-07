@@ -4,9 +4,16 @@ import { Layers, Paperclip, X } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { LangContext } from "@/contexts/LangContext";
 import Button from "../Button/Button";
-import { useDeleteProject } from "@/hooks/DELETE/useDeleteProject";
+import { motion } from "framer-motion";
 
-export default function ProjectCard({ project, onClick, src, className }) {
+export default function ProjectCard({
+  project,
+  onClick,
+  src,
+  className,
+  onDeleteClick,
+  isPending,
+}) {
   const { lang, toggleLang } = useContext(LangContext);
   const [token, setToken] = useState(null);
   useEffect(() => {
@@ -15,7 +22,6 @@ export default function ProjectCard({ project, onClick, src, className }) {
       setToken(currentToken);
     }
   }, []);
-  const { mutate, isPending, isError, error } = useDeleteProject();
 
   const formatDate = (dateString, lang) => {
     const date = new Date(dateString);
@@ -35,7 +41,7 @@ export default function ProjectCard({ project, onClick, src, className }) {
         "Ön Uç",
         "Derin Öğrenme",
         "Makine Öğrenmesi",
-        "Mobil",
+        "Mobil Uygulama",
         "Siber Güvenlik",
       ],
     },
@@ -46,7 +52,7 @@ export default function ProjectCard({ project, onClick, src, className }) {
         "Frontend",
         "Deep Learning",
         "Machine Learning",
-        "Mobile",
+        "Mobile Application",
         "Cyber Security",
       ],
     },
@@ -54,11 +60,7 @@ export default function ProjectCard({ project, onClick, src, className }) {
 
   function deleteProjectHandler(event) {
     event.stopPropagation();
-    const projectId = project.id;
-    mutate(
-      { token, projectId },
-      { onSuccess: (data) => console.log(data.message) },
-    );
+    onDeleteClick(project.id);
   }
 
   const categoryIndexes = {
@@ -75,8 +77,25 @@ export default function ProjectCard({ project, onClick, src, className }) {
 
   const activeGradient = className || classes.existing;
 
+  const itemVariants = {
+    hidden: { opacity: 0, y: 50, scale: 0.9 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: { duration: 0.4, ease: "easeOut" },
+    },
+  };
+
   return (
-    <div className={classes.projectCartContainer} onClick={onClick}>
+    <motion.div
+      layout
+      variants={itemVariants}
+      whileHover={{ x: 10, transition: { duration: 0.4 } }}
+      whileTap={{ scale: 0.98 }}
+      className={classes.projectCartContainer}
+      onClick={onClick}
+    >
       <div className={`${classes.projectCart} ${activeGradient}`}>
         <div className={classes.imgAndInfoContainer}>
           <div className={classes.imgContainer}>
@@ -118,6 +137,6 @@ export default function ProjectCard({ project, onClick, src, className }) {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

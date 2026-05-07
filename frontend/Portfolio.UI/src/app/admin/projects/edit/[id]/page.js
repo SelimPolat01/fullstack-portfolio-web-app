@@ -3,13 +3,16 @@
 import ProjectForm from "../../../../components/ProjectForm/ProjectForm";
 import { useGetProject } from "../../../../../hooks/GET/useGetProject";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { use, useContext, useEffect, useState } from "react";
 import { usePutProject } from "../../../../../hooks/PUT/usePutProject";
+import { LangContext } from "@/contexts/LangContext";
 
 export default function EditProject() {
   const params = useParams();
   const projectId = params.id;
+  const [isSuccess, setIsSucsess] = useState(false);
   const router = useRouter();
+  const { lang, toggleLang } = useContext(LangContext);
   const [token, setToken] = useState(null);
   useEffect(() => {
     const currentToken = localStorage.getItem("token");
@@ -38,8 +41,7 @@ export default function EditProject() {
       },
       {
         onSuccess: (data) => {
-          console.log(data?.result?.message);
-          router.replace("/admin/projects");
+          setIsSucsess(true);
         },
         onError: (err) => {
           console.log(err);
@@ -50,10 +52,30 @@ export default function EditProject() {
     );
   };
 
-  if (getIsLoading) return <div>Loading project details...</div>;
-  if (getIsError)
-    return <div style={{ color: "red" }}>Error loading project.</div>;
-  if (!getData || !getData.result) return null;
+  const texts = {
+    tr: {
+      loading: "Proje Yükleniyor...",
+    },
+    en: {
+      loading: "Loading Project...",
+    },
+  };
+
+  if (getIsLoading) {
+    return (
+      <div className="loadingContainer">
+        <p>{texts[lang].loading}</p>
+      </div>
+    );
+  }
+
+  if (getIsError) {
+    return (
+      <div className="loadingContainer">
+        <p>{error?.message || "An error occured"}</p>
+      </div>
+    );
+  }
 
   return (
     <ProjectForm
@@ -62,6 +84,8 @@ export default function EditProject() {
       initialData={getData?.result}
       onSubmitForm={handleUpdateProject}
       isLoading={putIsPending}
+      isSuccess={isSuccess}
+      setIsSuccess={setIsSucsess}
       editProject
     />
   );

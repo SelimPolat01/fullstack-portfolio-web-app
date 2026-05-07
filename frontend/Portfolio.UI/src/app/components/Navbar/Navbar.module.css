@@ -6,7 +6,7 @@
   top: 0%;
   left: 0%;
   width: 100%;
-  z-index: 1000;
+  z-index: 99999;
 }
 
 .firstFlex {
@@ -128,12 +128,14 @@
 }
 
 .unreadLength {
-  width: 18px;
-  height: 18px;
+  width: max-content;
+  height: max-content;
   border-radius: 50%;
   display: inline-block;
   font-size: 20px;
   background-color: #ff4e50;
   color: #f8f8f8;
   text-align: center;
+  padding: 1px 4px;
+  font-size: 14px;
 }

@@ -6,6 +6,7 @@
   border-radius: 12px;
   width: 350px;
   transition: transform 0.25s ease-in;
+  color: #333;
 }
 
 .div:hover {

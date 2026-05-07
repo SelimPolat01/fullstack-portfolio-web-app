@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Portfolio.Application.DTO.Admin
 {
@@ -12,6 +13,7 @@ namespace Portfolio.Application.DTO.Admin
 
         [Required(ErrorMessage = "Email can't be blank.")]
         [EmailAddress(ErrorMessage = "Invalid email address format.")]
+        [Remote(action: "", controller: "Admin")]
         public string Email { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Phone can't be blank.")]

@@ -2,58 +2,123 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  min-height: 70vh;
+  box-sizing: border-box;
+  margin: 2rem 0;
 }
+
 .messageContainer {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   padding: 2rem;
-  width: 800px;
-  height: 500px;
+  width: 100%;
+  max-width: 750px;
   background: #150a29;
   border: 1px solid #4b336b;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-  color: #ffffff;
-  transition: all 0.25s ease-in;
-  margin: 2rem 0 0 0;
+  border-radius: 20px 20px 20px 0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  color: #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.messageContainer::before {
+  content: "";
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  left: -29px;
+  bottom: 0px;
+  background: radial-gradient(circle at top left, transparent 70%, #150a29 71%);
+  filter: drop-shadow(-1px 1px 0px #4b336b);
 }
 
 .messageContainer:hover {
-  box-shadow: 0 0 15px rgba(255, 0, 127, 0.5);
+  box-shadow: 0 0 20px rgba(255, 0, 127, 0.2);
+  border-color: #7d4ba3;
 }
 
-.sender span {
-  font-size: 32px;
-  margin-bottom: 20px;
-  background: linear-gradient(
-    105.66deg,
-    #f9d423 16.76%,
-    #ff4e50 46.39%,
-    #c33764 76.01%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
-  display: inline-block;
+.infoGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.infoRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+@media (min-width: 600px) {
+  .infoRow {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .infoRow strong {
+    min-width: 130px;
+  }
+}
+
+.infoRow strong,
+.messageBlock strong {
+  font-size: 15px;
+  color: #d4b3ff;
+  background: rgba(212, 179, 255, 0.1);
+  padding: 4px 10px;
+  border-radius: 4px;
   width: max-content;
 }
 
-.sender strong {
-  font-size: 32px;
-  margin-bottom: 20px;
-  background: linear-gradient(
-    105.66deg,
-    #00c6ff 16.76%,
-    #833ab4 46.39%,
-    #ff007f 76.01%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
-  display: inline-block;
-  width: max-content;
-  margin: 0 0.7rem 0 0;
+.infoRow span {
+  font-size: 16px;
+  color: #f1f5f9;
+  padding-top: 4px;
+}
+
+.messageBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #cbd5e1;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 1.2rem;
+  border-radius: 4px;
+  margin: 0;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+/* Tarih */
+.dateContainer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5rem;
+  color: #94a3b8;
+  font-size: 13px;
+  margin-top: 0.5rem;
+}
+
+.clockIcon {
+  color: #ff007f;
+}
+
+.loading,
+.error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  color: #d4b3ff;
+  font-size: 18px;
 }

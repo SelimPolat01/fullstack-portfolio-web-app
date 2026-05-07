@@ -22,7 +22,7 @@ namespace Portfolio.Application.DTO.Message
         public string Subject { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Message can't be blank.")]
-        [StringLength(100, MinimumLength = 10, ErrorMessage = "Message must be between {2} and {1} characters.")]
+        [MinLength(5, ErrorMessage = "The message must be at least 5 characters long.")]
         public string Text { get; set; } = string.Empty;
     }
 

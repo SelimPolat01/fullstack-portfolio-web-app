@@ -1,4 +1,6 @@
+import { motion } from "framer-motion";
 import classes from "./Frame.module.css";
+import { frameVariants } from "@/lib/variants";
 
 export default function Frame({
   icon,
@@ -11,7 +13,10 @@ export default function Frame({
   className,
 }) {
   return (
-    <div className={`${classes.div} ${className ? className : ""}`}>
+    <motion.div
+      variants={frameVariants}
+      className={`${classes.div} ${className ? className : ""}`}
+    >
       <div className={classes.divContainer}>
         <div className={classes.iconContainer}>{icon}</div>
         <div className={classes.textContainer}>
@@ -43,6 +48,6 @@ export default function Frame({
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

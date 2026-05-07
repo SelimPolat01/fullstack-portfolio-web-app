@@ -21,8 +21,9 @@
   border-radius: 12px;
   padding: 8px;
   align-self: flex-start;
-  background-color: rgb(228, 228, 228);
+  background: rgba(59, 130, 246, 0.1);
   height: 24px;
+  color: #3b82f6;
 }
 
 .text {
@@ -46,11 +47,11 @@
 }
 
 .greenBg {
-  background-color: rgb(220, 255, 212);
+  background-color: rgba(34, 197, 94, 0.1);
 }
 
 .redBg {
-  background-color: rgb(254, 222, 222);
+  background-color: rgba(239, 68, 68, 0.1);
 }
 
 .changeContainer {
@@ -62,13 +63,13 @@
 }
 
 .upChange {
-  color: green;
+  color: #22c55e; /* Daha canlı bir yeşil */
   margin: 0;
   display: inline-block;
 }
 
 .downChange {
-  color: #e71818;
+  color: #ef4444;
   margin: 0;
   display: inline-block;
 }
@@ -78,7 +79,7 @@
 }
 
 .downColor {
-  color: #e71818;
+  color: #f00000;
 }
 
 .changeIcon {
