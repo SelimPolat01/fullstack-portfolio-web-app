@@ -1,0 +1,67 @@
+.footer {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem 0;
+  border-top: 1px solid #333;
+  color: #f8fafc;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.author {
+  font-size: 24px;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(90deg, #00c6ff, #0072ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-family: "Josefin Sans", sans-serif;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.title {
+  font-size: 20px;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(90deg, #fff700, #f6ff00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-family: "Josefin Sans", sans-serif;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+
+.description {
+  color: #ffffff;
+  font-size: 14px;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  font-family: "Josefin Sans", sans-serif;
+  font-weight: 300;
+  font-style: italic;
+  opacity: 0.8;
+  line-height: 1.6;
+}
+
+.socialContainer {
+  display: flex;
+  gap: 1rem;
+}
+
+.socialContainer a {
+  cursor: pointer;
+  transition: all 0.25s ease-in;
+}
+
+.socialContainer a:hover {
+  transform: scale(1.2);
+}

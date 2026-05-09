@@ -1,12 +1,14 @@
 .wrapper {
+  display: flex;
   width: 100%;
+  position: relative;
 }
 
 .linkDiv {
-  position: fixed;
+  position: sticky;
   top: 76px;
   left: 0%;
-  min-height: 91.8vh;
+  height: calc(100vh - 60px);
   width: 250px;
   z-index: 1000;
   background-color: rgba(18, 12, 34, 0.8);
@@ -60,10 +62,10 @@
 }
 
 .mainContent {
-  position: fixed;
+  position: sticky;
   top: 76px;
   left: 251px;
-  height: calc(100vh - 76px);
+  height: calc(100vh - 60px);
   background: linear-gradient(135deg, #0b0517 0%, #000000 100%);
   color: #f8f8f8;
   overflow-y: auto;

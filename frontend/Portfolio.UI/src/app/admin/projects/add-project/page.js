@@ -14,7 +14,10 @@ export default function AddProject() {
   useEffect(() => {
     const currentToken = localStorage.getItem("token");
     setToken(currentToken);
-    if (!currentToken) router.replace("/login");
+    if (!currentToken) {
+      router.replace("/admin/login");
+      return;
+    }
   }, [router]);
   const { mutate, isPending, isError, error } = usePostProject();
 

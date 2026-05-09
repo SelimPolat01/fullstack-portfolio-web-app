@@ -2,7 +2,8 @@ import "./globals.css";
 import ReactQuery from "../lib/reactQuery";
 import ConditionalNavbar from "./components/ConditionalNavbar/ConditionalNavbar";
 import { LangProvider } from "@/contexts/LangContext";
-import { ThemeProvider } from "next-themes";
+import Footer from "./components/Footer/Footer";
+import { Providers } from "./providers";
 
 export const metadata = {
   title: "Home",
@@ -25,7 +26,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
-        <ThemeProvider>
+        <Providers>
           <LangProvider>
             <ReactQuery>
               <svg width="0" height="0" style={{ position: "absolute" }}>
@@ -76,10 +77,11 @@ export default function RootLayout({ children }) {
               <div className="layout">
                 <ConditionalNavbar />
                 <main className="main">{children}</main>
+                <Footer author="Selim POLAT" />
               </div>
             </ReactQuery>
           </LangProvider>
-        </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );

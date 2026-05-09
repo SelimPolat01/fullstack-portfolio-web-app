@@ -8,6 +8,7 @@ export default function Input({ type, name, className, ...props }) {
       className={`${classes.input} ${className ? className : ""}`}
       id={name}
       {...props}
+      autoComplete="off"
     />
   );
 }

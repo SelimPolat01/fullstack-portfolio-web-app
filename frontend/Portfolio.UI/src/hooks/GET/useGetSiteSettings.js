@@ -12,7 +12,7 @@ export function useGetSiteSettings(token) {
   return useQuery({
     queryKey: ["siteSettings", token],
     queryFn: () => getSiteSettings(token),
-    enabled: !!token && token !== undefined && token !== "",
+    enabled: !!token,
     retry: false,
   });
 }

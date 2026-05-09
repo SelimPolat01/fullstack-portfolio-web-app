@@ -3,7 +3,7 @@ import { forwardRef, useEffect, useState } from "react";
 import Button from "../Button/Button";
 import classes from "./ConfirmModal.module.css";
 import { Trash2 } from "lucide-react";
-import { motion, scale } from "framer-motion";
+import { motion } from "framer-motion";
 
 const ConfirmModal = forwardRef(
   ({ isOpen, onConfirm, onCancel, text, title }, ref) => {

@@ -12,7 +12,7 @@ export function useGetPersonalInfos(token) {
   return useQuery({
     queryKey: ["personalInfos", token],
     queryFn: () => getPersonalInfos(token),
-    enabled: !!token && token !== undefined && token !== "",
+    enabled: !!token,
     retry: false,
   });
 }
